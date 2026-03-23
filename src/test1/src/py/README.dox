@@ -1,0 +1,34 @@
+/**
+ * @defgroup python Python API
+ * \if en
+ *  @brief Documentation for the Python Modules.
+ * \endif
+ *
+ * \if de
+ * @brief Dokumentation f&uuml;r die Python import Module.
+ * \endif
+ */
+
+/**
+ * \if en
+ * @page en_py_overview Python Overview.
+ *
+ * @section en_py_start Basis
+ * Your Python-Intro text come into here.
+ *
+ * @section en_py_nav Navigation
+ * - @ref en_cpp_overview
+ * - @ref en_pas_overview
+ * \endif
+ *
+ * \if de
+ * @page de_py_overview Python &Uuml;bersicht.
+ *
+ *  @section de_py_start Einstieg
+ *  Hier kommt dein Python-Intro rein.
+ *
+ *  @section de_py_nav Navigation
+ *  - @ref de_cpp_overview
+ *  - @ref de_pas_overview
+ * \endif
+ */

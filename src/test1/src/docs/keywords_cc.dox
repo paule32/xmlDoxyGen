@@ -1,0 +1,298 @@
+/** \page kw_cpp_class C++-Schluesselwort: class
+ *
+ * \brief Definiert einen Klassentyp in C++.
+ *
+ * \section kw_cpp_class_syntax Syntax
+ * \code{.cpp}
+ * class
+ * \endcode
+ *
+ * \section kw_cpp_class_desc Beschreibung
+ * Definiert einen Klassentyp in C++.
+ */
+
+/** \page kw_cpp_virtual C++-Schluesselwort: virtual
+ *
+ * \brief Kennzeichnet eine virtuell ueberschreibbare Methode.
+ *
+ * \section kw_cpp_virtual_syntax Syntax
+ * \code{.cpp}
+ * virtual
+ * \endcode
+ *
+ * \section kw_cpp_virtual_desc Beschreibung
+ * Kennzeichnet eine virtuell ueberschreibbare Methode.
+ */
+
+/** \page kw_cpp_int C++-Schluesselwort: int
+ *
+ * \brief Standard-Ganzzahltyp.
+ *
+ * \section kw_cpp_int_syntax Syntax
+ * \code{.cpp}
+ * int
+ * \endcode
+ *
+ * \section kw_cpp_int_desc Beschreibung
+ * Standard-Ganzzahltyp.
+ */
+
+/** \page kw_cpp_char C++-Schluesselwort: char
+ *
+ * \brief Datentyp fuer ein einzelnes Zeichen.
+ *
+ * \section kw_cpp_char_syntax Syntax
+ * \code{.cpp}
+ * char
+ * \endcode
+ *
+ * \section kw_cpp_char_desc Beschreibung
+ * Datentyp fuer ein einzelnes Zeichen.
+ */
+
+/** \page kw_cpp_void C++-Schluesselwort: void
+ *
+ * \brief Kennzeichnet das Fehlen eines Rueckgabetyps oder Typs.
+ *
+ * \section kw_cpp_void_syntax Syntax
+ * \code{.cpp}
+ * void
+ * \endcode
+ *
+ * \section kw_cpp_void_desc Beschreibung
+ * Kennzeichnet das Fehlen eines Rueckgabetyps oder Typs.
+ */
+
+/** \page kw_cpp_struct C++-Schluesselwort: struct
+ *
+ * \brief Definiert einen Strukturtyp.
+ *
+ * \section kw_cpp_struct_syntax Syntax
+ * \code{.cpp}
+ * struct
+ * \endcode
+ *
+ * \section kw_cpp_struct_desc Beschreibung
+ * Definiert einen Strukturtyp.
+ */
+
+/** \page kw_cpp_reinterpret_cast C++-Schluesselwort: reinterpret_cast
+ *
+ * \brief Fuehrt eine sehr direkte Typumwandlung durch.
+ *
+ * \section kw_cpp_reinterpret_cast_syntax Syntax
+ * \code{.cpp}
+ * reinterpret_cast
+ * \endcode
+ *
+ * \section kw_cpp_reinterpret_cast_desc Beschreibung
+ * Fuehrt eine sehr direkte Typumwandlung durch.
+ */
+
+/** \page kw_cpp_static_cast C++-Schluesselwort: static_cast
+ *
+ * \brief Fuehrt eine statisch gepruefte Typumwandlung durch.
+ *
+ * \section kw_cpp_static_cast_syntax Syntax
+ * \code{.cpp}
+ * static_cast
+ * \endcode
+ *
+ * \section kw_cpp_static_cast_desc Beschreibung
+ * Fuehrt eine statisch gepruefte Typumwandlung durch.
+ */
+
+/** \page kw_cpp_dynamic_cast C++-Schluesselwort: dynamic_cast
+ *
+ * \brief Fuehrt eine RTTI-basierte Typumwandlung durch.
+ *
+ * \section kw_cpp_dynamic_cast_syntax Syntax
+ * \code{.cpp}
+ * dynamic_cast
+ * \endcode
+ *
+ * \section kw_cpp_dynamic_cast_desc Beschreibung
+ * Fuehrt eine RTTI-basierte Typumwandlung durch.
+ */
+
+/** \page kw_cpp_return C++-Schluesselwort: return
+ *
+ * \brief Verlaesst eine Funktion und gibt optional einen Wert zurueck.
+ *
+ * \section kw_cpp_return_syntax Syntax
+ * \code{.cpp}
+ * return
+ * \endcode
+ *
+ * \section kw_cpp_return_desc Beschreibung
+ * Verlaesst eine Funktion und gibt optional einen Wert zurueck.
+ */
+
+/** \page kw_cpp_switch C++-Schluesselwort: switch
+ *
+ * \brief Mehrfachauswahl ueber ganzzahlige Werte.
+ *
+ * \section kw_cpp_switch_syntax Syntax
+ * \code{.cpp}
+ * switch
+ * \endcode
+ *
+ * \section kw_cpp_switch_desc Beschreibung
+ * Mehrfachauswahl ueber ganzzahlige Werte.
+ */
+
+/** \page kw_cpp_case C++-Schluesselwort: case
+ *
+ * \brief Fallzweig innerhalb von switch.
+ *
+ * \section kw_cpp_case_syntax Syntax
+ * \code{.cpp}
+ * case
+ * \endcode
+ *
+ * \section kw_cpp_case_desc Beschreibung
+ * Fallzweig innerhalb von switch.
+ */
+
+/** \page kw_cpp_for C++-Schluesselwort: for
+ *
+ * \brief Zaehlschleife.
+ *
+ * \section kw_cpp_for_syntax Syntax
+ * \code{.cpp}
+ * for
+ * \endcode
+ *
+ * \section kw_cpp_for_desc Beschreibung
+ * Zaehlschleife.
+ */
+
+/** \page kw_cpp_while C++-Schluesselwort: while
+ *
+ * \brief Schleife mit Vorbedingung.
+ *
+ * \section kw_cpp_while_syntax Syntax
+ * \code{.cpp}
+ * while
+ * \endcode
+ *
+ * \section kw_cpp_while_desc Beschreibung
+ * Schleife mit Vorbedingung.
+ */
+
+/** \page kw_cpp_if C++-Schluesselwort: if
+ *
+ * \brief Bedingte Verzweigung.
+ *
+ * \section kw_cpp_if_syntax Syntax
+ * \code{.cpp}
+ * if
+ * \endcode
+ *
+ * \section kw_cpp_if_desc Beschreibung
+ * Bedingte Verzweigung.
+ */
+
+/** \page kw_cpp_else C++-Schluesselwort: else
+ *
+ * \brief Alternativer Zweig einer If-Anweisung.
+ *
+ * \section kw_cpp_else_syntax Syntax
+ * \code{.cpp}
+ * else
+ * \endcode
+ *
+ * \section kw_cpp_else_desc Beschreibung
+ * Alternativer Zweig einer If-Anweisung.
+ */
+
+/** \page kw_cpp_include C++-Schluesselwort: include
+ *
+ * \brief Praeprozessor-Direktive zum Einbinden von Headern.
+ *
+ * \section kw_cpp_include_syntax Syntax
+ * \code{.cpp}
+ * #include
+ * \endcode
+ *
+ * \section kw_cpp_include_desc Beschreibung
+ * Praeprozessor-Direktive zum Einbinden von Headern.
+ */
+
+/** \page kw_cpp_define C++-Schluesselwort: define
+ *
+ * \brief Praeprozessor-Direktive zum Definieren von Makros.
+ *
+ * \section kw_cpp_define_syntax Syntax
+ * \code{.cpp}
+ * #define
+ * \endcode
+ *
+ * \section kw_cpp_define_desc Beschreibung
+ * Praeprozessor-Direktive zum Definieren von Makros.
+ */
+
+/** \page kw_cpp_ifdef C++-Schluesselwort: ifdef
+ *
+ * \brief Praeprozessor-Bedingung fuer definierte Makros.
+ *
+ * \section kw_cpp_ifdef_syntax Syntax
+ * \code{.cpp}
+ * #ifdef
+ * \endcode
+ *
+ * \section kw_cpp_ifdef_desc Beschreibung
+ * Praeprozessor-Bedingung fuer definierte Makros.
+ */
+
+/** \page kw_cpp_defined C++-Schluesselwort: defined
+ *
+ * \brief Operator in Praeprozessor-Ausdruecken.
+ *
+ * \section kw_cpp_defined_syntax Syntax
+ * \code{.cpp}
+ * defined
+ * \endcode
+ *
+ * \section kw_cpp_defined_desc Beschreibung
+ * Operator in Praeprozessor-Ausdruecken.
+ */
+
+/** \page kw_cpp_typeof C++-Schluesselwort: typeof
+ *
+ * \brief Nicht standardisierte oder compilerabhaengige Typabfrage.
+ *
+ * \section kw_cpp_typeof_syntax Syntax
+ * \code{.cpp}
+ * typeof
+ * \endcode
+ *
+ * \section kw_cpp_typeof_desc Beschreibung
+ * Nicht standardisierte oder compilerabhaengige Typabfrage.
+ */
+
+/** \page kw_cpp_cout C++-Schluesselwort: cout
+ *
+ * \brief Standardausgabestrom aus iostream.
+ *
+ * \section kw_cpp_cout_syntax Syntax
+ * \code{.cpp}
+ * cout
+ * \endcode
+ *
+ * \section kw_cpp_cout_desc Beschreibung
+ * Standardausgabestrom aus iostream.
+ */
+
+/** \page kw_cpp_cin C++-Schluesselwort: cin
+ *
+ * \brief Standardeingabestrom aus iostream.
+ *
+ * \section kw_cpp_cin_syntax Syntax
+ * \code{.cpp}
+ * cin
+ * \endcode
+ *
+ * \section kw_cpp_cin_desc Beschreibung
+ * Standardeingabestrom aus iostream.
+ */

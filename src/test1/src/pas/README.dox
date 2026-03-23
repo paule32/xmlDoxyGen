@@ -1,0 +1,34 @@
+/**
+ * @defgroup pascal Pascal API
+ * \if en
+ *  @brief Documentation for the Pascal Units.
+ * \endif
+ *
+ * \if de
+ * @brief Dokumentation f&uuml;r die Pascal Module.
+ * \endif
+ */
+
+/**
+ * \if en
+ * @page en_pas_overview Pascal (FPC) Overview
+ *
+ *  @section en_pas_start Basis
+ *  Intro Text for Pascal.
+ *
+ *  @section pas_nav Navigation
+ *  - @ref en_cpp_overview
+ *  - @ref en_py_overview
+ * \endif
+ *
+ * \if de
+ * @page de_pas_overview Pascal (FPC) &Uuml;bersicht
+ *
+ *  @section pas_start Einstieg
+ *  Hier kommt dein Pascal-Intro rein.
+ *
+ *  @section pas_nav Navigation
+ *  - @ref de_cpp_overview
+ *  - @ref de_py_overview
+ * \endif
+ */

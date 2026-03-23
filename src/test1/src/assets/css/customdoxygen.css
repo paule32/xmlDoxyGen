@@ -1,0 +1,4 @@
+/* Trigger: wenn Doxygen dark ist ODER Browser dark bevorzugt */
+@media (prefers-color-scheme: dark) {
+  /* optional: hier nix für SVG, das machen wir per JS */
+}

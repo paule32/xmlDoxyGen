@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="doxygen-doc.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background: #0a0f1f;
+      color: #eef2ff;
+    }
+    .app-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px;
+      background: linear-gradient(180deg, #0b1020, #101632);
+      min-height: 100vh;
+    }
+    .host-card {
+      border: 1px solid #27325e;
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,.03);
+      margin-bottom: 18px;
+    }
+  </style>
+</head>
+<body>
+  <main class="app-content">
+    <div class="host-card">
+      <strong>Host-Container</strong><br>
+      Diese Seite wird vom Host-Template gerahmt. Der Inhalt darunter stammt aus dem Python/XSLT-Tool.
+    </div>
+    {{ body_html }}
+  </main>
+</body>
+</html>

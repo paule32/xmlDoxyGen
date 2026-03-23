@@ -1,0 +1,28 @@
+/** \page kw_py_class Python-Schluesselwort: class
+ *
+ * \brief Definiert eine Klasse in Python.
+ *
+ * \section kw_py_class_syntax Syntax
+ * \code{.py}
+ * class QRect:
+ *     def __init__(self):
+ *         pass
+ * \endcode
+ *
+ * \section kw_py_class_desc Beschreibung
+ * Mit \c class wird eine neue Klasse definiert. Klassen koennen Attribute, Methoden und Vererbungsbeziehungen kapseln.
+ */
+
+/** \page kw_py_def Python-Schluesselwort: def
+ *
+ * \brief Definiert eine Funktion oder Methode in Python.
+ *
+ * \section kw_py_def_syntax Syntax
+ * \code{.py}
+ * def foo(self):
+ *     return 0
+ * \endcode
+ *
+ * \section kw_py_def_desc Beschreibung
+ * Mit \c def wird eine Funktion oder eine Methode definiert. In Klassen beschreibt es typischerweise einen Member wie \c foo oder \c __init__.
+ */

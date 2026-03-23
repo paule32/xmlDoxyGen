@@ -1,0 +1,42 @@
+/**
+ * @defgroup cpp C/C++ API
+ * \if en
+ * @brief Documentation for the C/C++ Units.
+ * \endif
+ *
+ * \if de
+ * @brief Dokumentation f&uuml;r die C/C++ Module.
+ * \endif
+ */
+
+/**
+ * \if en
+ * @page en_cpp_overview C/C++ Overview
+ * \endif
+ *
+ * \if de
+ * @page de_cpp_overview C/C++ &Uuml;berblick
+ * \endif
+ *
+ * \if en
+ * @section en_cpp_start Basis
+ * Your C/C++ Intro here.
+ * \endif
+ *
+ * \if de
+ *  @section de_cpp_start Einstieg
+ *  Hier kommt dein C/C++-Intro rein.
+ * \endif
+ *
+ * \if en
+ *  @section en_cpp_nav Navigation
+ *  - @ref en_pas_overview
+ *  - @ref en_py_overview
+ * \endif
+ *
+ * \if de
+ * @section de_cpp_nav Navigation
+ * - @ref de_pas_overview
+ * - @ref de_py_overview
+ * \endif
+ */

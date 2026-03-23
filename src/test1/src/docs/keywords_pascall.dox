@@ -1,0 +1,32 @@
+/** \page kw_pas_class Pascal-Schlüsselwort: class
+ *
+ * \brief Definiert einen Klassentyp in Pascal/Delphi.
+ *
+ * \section kw_pas_class_syntax Syntax
+ * \code{.pas}
+ * type
+ *   QRect = class
+ *   public
+ *     constructor Create;
+ *   end;
+ * \endcode
+ *
+ * \section kw_pas_class_desc Beschreibung
+ * Mit \c class wird in Pascal bzw. Delphi ein Klassentyp definiert.
+ *
+ * \section kw_pas_class_seealso Siehe auch
+ * - \ref kw_pas_constructor "Pascal-Schlüsselwort: constructor"
+ */
+
+/** \page kw_pas_constructor Pascal-Schlüsselwort: constructor
+ *
+ * \brief Deklariert einen Konstruktor.
+ *
+ * \section kw_pas_constructor_syntax Syntax
+ * \code{.pas}
+ * constructor Create;
+ * \endcode
+ *
+ * \section kw_pas_constructor_desc Beschreibung
+ * Mit \c constructor wird ein Konstruktor einer Klasse deklariert.
+ */

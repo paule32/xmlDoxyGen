@@ -1,0 +1,5 @@
+INPUT += docs
+FILE_PATTERNS += *.dox *.md *.py *.pas *.cc
+RECURSIVE = YES
+
+ALIASES += kwheader{2}="\\par Sprache: \\1^^\\par Schlüsselwort: \\2^^"

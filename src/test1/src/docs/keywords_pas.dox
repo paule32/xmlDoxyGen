@@ -1,0 +1,623 @@
+/** \page kw_pas_class Pascal-Schluesselwort: class
+ *
+ * \brief Definiert einen Klassentyp in Pascal oder Delphi.
+ *
+ * \section kw_pas_class_syntax Syntax
+ * \code{.pas}
+ * class
+ * \endcode
+ *
+ * \section kw_pas_class_desc Beschreibung
+ * Definiert einen Klassentyp in Pascal oder Delphi.
+ */
+
+/** \page kw_pas_program Pascal-Schluesselwort: program
+ *
+ * \brief Markiert den Einstiegspunkt eines Pascal-Programms.
+ *
+ * \section kw_pas_program_syntax Syntax
+ * \code{.pas}
+ * program
+ * \endcode
+ *
+ * \section kw_pas_program_desc Beschreibung
+ * Markiert den Einstiegspunkt eines Pascal-Programms.
+ */
+
+/** \page kw_pas_unit Pascal-Schluesselwort: unit
+ *
+ * \brief Kennzeichnet eine wiederverwendbare Moduldatei.
+ *
+ * \section kw_pas_unit_syntax Syntax
+ * \code{.pas}
+ * unit
+ * \endcode
+ *
+ * \section kw_pas_unit_desc Beschreibung
+ * Kennzeichnet eine wiederverwendbare Moduldatei.
+ */
+
+/** \page kw_pas_library Pascal-Schluesselwort: library
+ *
+ * \brief Definiert ein Bibliotheksprojekt.
+ *
+ * \section kw_pas_library_syntax Syntax
+ * \code{.pas}
+ * library
+ * \endcode
+ *
+ * \section kw_pas_library_desc Beschreibung
+ * Definiert ein Bibliotheksprojekt.
+ */
+
+/** \page kw_pas_uses Pascal-Schluesselwort: uses
+ *
+ * \brief Bindet andere Units oder Module ein.
+ *
+ * \section kw_pas_uses_syntax Syntax
+ * \code{.pas}
+ * uses
+ * \endcode
+ *
+ * \section kw_pas_uses_desc Beschreibung
+ * Bindet andere Units oder Module ein.
+ */
+
+/** \page kw_pas_type Pascal-Schluesselwort: type
+ *
+ * \brief Leitet einen Typdefinitionsblock ein.
+ *
+ * \section kw_pas_type_syntax Syntax
+ * \code{.pas}
+ * type
+ * \endcode
+ *
+ * \section kw_pas_type_desc Beschreibung
+ * Leitet einen Typdefinitionsblock ein.
+ */
+
+/** \page kw_pas_const Pascal-Schluesselwort: const
+ *
+ * \brief Leitet Konstantendeklarationen ein.
+ *
+ * \section kw_pas_const_syntax Syntax
+ * \code{.pas}
+ * const
+ * \endcode
+ *
+ * \section kw_pas_const_desc Beschreibung
+ * Leitet Konstantendeklarationen ein.
+ */
+
+/** \page kw_pas_boolean Pascal-Schluesselwort: boolean
+ *
+ * \brief Boolescher Datentyp fuer wahr oder falsch.
+ *
+ * \section kw_pas_boolean_syntax Syntax
+ * \code{.pas}
+ * boolean
+ * \endcode
+ *
+ * \section kw_pas_boolean_desc Beschreibung
+ * Boolescher Datentyp fuer wahr oder falsch.
+ */
+
+/** \page kw_pas_string Pascal-Schluesselwort: string
+ *
+ * \brief Zeichenketten-Datentyp.
+ *
+ * \section kw_pas_string_syntax Syntax
+ * \code{.pas}
+ * string
+ * \endcode
+ *
+ * \section kw_pas_string_desc Beschreibung
+ * Zeichenketten-Datentyp.
+ */
+
+/** \page kw_pas_char Pascal-Schluesselwort: char
+ *
+ * \brief Datentyp fuer ein einzelnes Zeichen.
+ *
+ * \section kw_pas_char_syntax Syntax
+ * \code{.pas}
+ * char
+ * \endcode
+ *
+ * \section kw_pas_char_desc Beschreibung
+ * Datentyp fuer ein einzelnes Zeichen.
+ */
+
+/** \page kw_pas_byte Pascal-Schluesselwort: byte
+ *
+ * \brief Ganzzahltyp im Bereich 0 bis 255.
+ *
+ * \section kw_pas_byte_syntax Syntax
+ * \code{.pas}
+ * byte
+ * \endcode
+ *
+ * \section kw_pas_byte_desc Beschreibung
+ * Ganzzahltyp im Bereich 0 bis 255.
+ */
+
+/** \page kw_pas_word Pascal-Schluesselwort: word
+ *
+ * \brief Vorzeichenloser Ganzzahltyp.
+ *
+ * \section kw_pas_word_syntax Syntax
+ * \code{.pas}
+ * word
+ * \endcode
+ *
+ * \section kw_pas_word_desc Beschreibung
+ * Vorzeichenloser Ganzzahltyp.
+ */
+
+/** \page kw_pas_integer Pascal-Schluesselwort: integer
+ *
+ * \brief Standard-Ganzzahltyp.
+ *
+ * \section kw_pas_integer_syntax Syntax
+ * \code{.pas}
+ * integer
+ * \endcode
+ *
+ * \section kw_pas_integer_desc Beschreibung
+ * Standard-Ganzzahltyp.
+ */
+
+/** \page kw_pas_extended Pascal-Schluesselwort: extended
+ *
+ * \brief Gleitkommatyp mit erweiterter Genauigkeit.
+ *
+ * \section kw_pas_extended_syntax Syntax
+ * \code{.pas}
+ * extended
+ * \endcode
+ *
+ * \section kw_pas_extended_desc Beschreibung
+ * Gleitkommatyp mit erweiterter Genauigkeit.
+ */
+
+/** \page kw_pas_real Pascal-Schluesselwort: real
+ *
+ * \brief Klassischer Gleitkommatyp.
+ *
+ * \section kw_pas_real_syntax Syntax
+ * \code{.pas}
+ * real
+ * \endcode
+ *
+ * \section kw_pas_real_desc Beschreibung
+ * Klassischer Gleitkommatyp.
+ */
+
+/** \page kw_pas_for Pascal-Schluesselwort: for
+ *
+ * \brief Zaehlschleife mit festem Laufbereich.
+ *
+ * \section kw_pas_for_syntax Syntax
+ * \code{.pas}
+ * for
+ * \endcode
+ *
+ * \section kw_pas_for_desc Beschreibung
+ * Zaehlschleife mit festem Laufbereich.
+ */
+
+/** \page kw_pas_if Pascal-Schluesselwort: if
+ *
+ * \brief Bedingte Verzweigung.
+ *
+ * \section kw_pas_if_syntax Syntax
+ * \code{.pas}
+ * if
+ * \endcode
+ *
+ * \section kw_pas_if_desc Beschreibung
+ * Bedingte Verzweigung.
+ */
+
+/** \page kw_pas_else Pascal-Schluesselwort: else
+ *
+ * \brief Alternativer Zweig einer If-Anweisung.
+ *
+ * \section kw_pas_else_syntax Syntax
+ * \code{.pas}
+ * else
+ * \endcode
+ *
+ * \section kw_pas_else_desc Beschreibung
+ * Alternativer Zweig einer If-Anweisung.
+ */
+
+/** \page kw_pas_end Pascal-Schluesselwort: end
+ *
+ * \brief Beendet einen Block oder Typ.
+ *
+ * \section kw_pas_end_syntax Syntax
+ * \code{.pas}
+ * end
+ * \endcode
+ *
+ * \section kw_pas_end_desc Beschreibung
+ * Beendet einen Block oder Typ.
+ */
+
+/** \page kw_pas_while Pascal-Schluesselwort: while
+ *
+ * \brief Schleife mit Vorbedingung.
+ *
+ * \section kw_pas_while_syntax Syntax
+ * \code{.pas}
+ * while
+ * \endcode
+ *
+ * \section kw_pas_while_desc Beschreibung
+ * Schleife mit Vorbedingung.
+ */
+
+/** \page kw_pas_loop Pascal-Schluesselwort: loop
+ *
+ * \brief Beispielhalter fuer eine Schleifenkonstruktion in einigen Dialekten.
+ *
+ * \section kw_pas_loop_syntax Syntax
+ * \code{.pas}
+ * loop
+ * \endcode
+ *
+ * \section kw_pas_loop_desc Beschreibung
+ * Beispielhalter fuer eine Schleifenkonstruktion in einigen Dialekten.
+ */
+
+/** \page kw_pas_repeat Pascal-Schluesselwort: repeat
+ *
+ * \brief Leitet eine Schleife mit Nachbedingung ein.
+ *
+ * \section kw_pas_repeat_syntax Syntax
+ * \code{.pas}
+ * repeat
+ * \endcode
+ *
+ * \section kw_pas_repeat_desc Beschreibung
+ * Leitet eine Schleife mit Nachbedingung ein.
+ */
+
+/** \page kw_pas_until Pascal-Schluesselwort: until
+ *
+ * \brief Abbruchbedingung einer Repeat-Schleife.
+ *
+ * \section kw_pas_until_syntax Syntax
+ * \code{.pas}
+ * until
+ * \endcode
+ *
+ * \section kw_pas_until_desc Beschreibung
+ * Abbruchbedingung einer Repeat-Schleife.
+ */
+
+/** \page kw_pas_record Pascal-Schluesselwort: record
+ *
+ * \brief Definiert einen zusammengesetzten Datentyp.
+ *
+ * \section kw_pas_record_syntax Syntax
+ * \code{.pas}
+ * record
+ * \endcode
+ *
+ * \section kw_pas_record_desc Beschreibung
+ * Definiert einen zusammengesetzten Datentyp.
+ */
+
+/** \page kw_pas_array Pascal-Schluesselwort: array
+ *
+ * \brief Definiert ein Feld oder Array.
+ *
+ * \section kw_pas_array_syntax Syntax
+ * \code{.pas}
+ * array
+ * \endcode
+ *
+ * \section kw_pas_array_desc Beschreibung
+ * Definiert ein Feld oder Array.
+ */
+
+/** \page kw_pas_forward Pascal-Schluesselwort: forward
+ *
+ * \brief Vorwaertsdeklaration einer Routine.
+ *
+ * \section kw_pas_forward_syntax Syntax
+ * \code{.pas}
+ * forward
+ * \endcode
+ *
+ * \section kw_pas_forward_desc Beschreibung
+ * Vorwaertsdeklaration einer Routine.
+ */
+
+/** \page kw_pas_var Pascal-Schluesselwort: var
+ *
+ * \brief Leitet Variablendeklarationen ein oder markiert Uebergabe per Referenz.
+ *
+ * \section kw_pas_var_syntax Syntax
+ * \code{.pas}
+ * var
+ * \endcode
+ *
+ * \section kw_pas_var_desc Beschreibung
+ * Leitet Variablendeklarationen ein oder markiert Uebergabe per Referenz.
+ */
+
+/** \page kw_pas_virtual Pascal-Schluesselwort: virtual
+ *
+ * \brief Kennzeichnet eine virtuell ueberschreibbare Methode.
+ *
+ * \section kw_pas_virtual_syntax Syntax
+ * \code{.pas}
+ * virtual
+ * \endcode
+ *
+ * \section kw_pas_virtual_desc Beschreibung
+ * Kennzeichnet eine virtuell ueberschreibbare Methode.
+ */
+
+/** \page kw_pas_interface Pascal-Schluesselwort: interface
+ *
+ * \brief Schnittstellenteil einer Unit oder ein Interface-Typ.
+ *
+ * \section kw_pas_interface_syntax Syntax
+ * \code{.pas}
+ * interface
+ * \endcode
+ *
+ * \section kw_pas_interface_desc Beschreibung
+ * Schnittstellenteil einer Unit oder ein Interface-Typ.
+ */
+
+/** \page kw_pas_implementation Pascal-Schluesselwort: implementation
+ *
+ * \brief Implementierungsteil einer Unit.
+ *
+ * \section kw_pas_implementation_syntax Syntax
+ * \code{.pas}
+ * implementation
+ * \endcode
+ *
+ * \section kw_pas_implementation_desc Beschreibung
+ * Implementierungsteil einer Unit.
+ */
+
+/** \page kw_pas_procedure Pascal-Schluesselwort: procedure
+ *
+ * \brief Definiert eine Prozedur ohne Rueckgabewert.
+ *
+ * \section kw_pas_procedure_syntax Syntax
+ * \code{.pas}
+ * procedure
+ * \endcode
+ *
+ * \section kw_pas_procedure_desc Beschreibung
+ * Definiert eine Prozedur ohne Rueckgabewert.
+ */
+
+/** \page kw_pas_function Pascal-Schluesselwort: function
+ *
+ * \brief Definiert eine Funktion mit Rueckgabewert.
+ *
+ * \section kw_pas_function_syntax Syntax
+ * \code{.pas}
+ * function
+ * \endcode
+ *
+ * \section kw_pas_function_desc Beschreibung
+ * Definiert eine Funktion mit Rueckgabewert.
+ */
+
+/** \page kw_pas_case Pascal-Schluesselwort: case
+ *
+ * \brief Mehrfachauswahl ueber Werte.
+ *
+ * \section kw_pas_case_syntax Syntax
+ * \code{.pas}
+ * case
+ * \endcode
+ *
+ * \section kw_pas_case_desc Beschreibung
+ * Mehrfachauswahl ueber Werte.
+ */
+
+/** \page kw_pas_of Pascal-Schluesselwort: of
+ *
+ * \brief Gehoert zu Case oder Array of.
+ *
+ * \section kw_pas_of_syntax Syntax
+ * \code{.pas}
+ * of
+ * \endcode
+ *
+ * \section kw_pas_of_desc Beschreibung
+ * Gehoert zu Case oder Array of.
+ */
+
+/** \page kw_pas_default Pascal-Schluesselwort: default
+ *
+ * \brief Standardzweig in manchen Pascal-Dialekten.
+ *
+ * \section kw_pas_default_syntax Syntax
+ * \code{.pas}
+ * default
+ * \endcode
+ *
+ * \section kw_pas_default_desc Beschreibung
+ * Standardzweig in manchen Pascal-Dialekten.
+ */
+
+/** \page kw_pas_switch Pascal-Schluesselwort: switch
+ *
+ * \brief Begriff aus anderen Sprachen; in Pascal meist Case.
+ *
+ * \section kw_pas_switch_syntax Syntax
+ * \code{.pas}
+ * switch
+ * \endcode
+ *
+ * \section kw_pas_switch_desc Beschreibung
+ * Begriff aus anderen Sprachen; in Pascal meist Case.
+ */
+
+/** \page kw_pas_begin Pascal-Schluesselwort: begin
+ *
+ * \brief Beginnt einen Anweisungsblock.
+ *
+ * \section kw_pas_begin_syntax Syntax
+ * \code{.pas}
+ * begin
+ * \endcode
+ *
+ * \section kw_pas_begin_desc Beschreibung
+ * Beginnt einen Anweisungsblock.
+ */
+
+/** \page kw_pas_exit Pascal-Schluesselwort: exit
+ *
+ * \brief Verlaesst die aktuelle Routine.
+ *
+ * \section kw_pas_exit_syntax Syntax
+ * \code{.pas}
+ * exit
+ * \endcode
+ *
+ * \section kw_pas_exit_desc Beschreibung
+ * Verlaesst die aktuelle Routine.
+ */
+
+/** \page kw_pas_halt Pascal-Schluesselwort: halt
+ *
+ * \brief Beendet das Programm sofort.
+ *
+ * \section kw_pas_halt_syntax Syntax
+ * \code{.pas}
+ * halt
+ * \endcode
+ *
+ * \section kw_pas_halt_desc Beschreibung
+ * Beendet das Programm sofort.
+ */
+
+/** \page kw_pas_break Pascal-Schluesselwort: break
+ *
+ * \brief Verlaesst eine Schleife vorzeitig.
+ *
+ * \section kw_pas_break_syntax Syntax
+ * \code{.pas}
+ * break
+ * \endcode
+ *
+ * \section kw_pas_break_desc Beschreibung
+ * Verlaesst eine Schleife vorzeitig.
+ */
+
+/** \page kw_pas_continue Pascal-Schluesselwort: continue
+ *
+ * \brief Setzt die Schleife mit der naechsten Iteration fort.
+ *
+ * \section kw_pas_continue_syntax Syntax
+ * \code{.pas}
+ * continue
+ * \endcode
+ *
+ * \section kw_pas_continue_desc Beschreibung
+ * Setzt die Schleife mit der naechsten Iteration fort.
+ */
+
+/** \page kw_pas_goto Pascal-Schluesselwort: goto
+ *
+ * \brief Springt zu einem Label.
+ *
+ * \section kw_pas_goto_syntax Syntax
+ * \code{.pas}
+ * goto
+ * \endcode
+ *
+ * \section kw_pas_goto_desc Beschreibung
+ * Springt zu einem Label.
+ */
+
+/** \page kw_pas_label Pascal-Schluesselwort: label
+ *
+ * \brief Deklariert eine Sprungmarke.
+ *
+ * \section kw_pas_label_syntax Syntax
+ * \code{.pas}
+ * label
+ * \endcode
+ *
+ * \section kw_pas_label_desc Beschreibung
+ * Deklariert eine Sprungmarke.
+ */
+
+/** \page kw_pas_overwrite Pascal-Schluesselwort: overwrite
+ *
+ * \brief Platzhalterbegriff, oft ist override gemeint.
+ *
+ * \section kw_pas_overwrite_syntax Syntax
+ * \code{.pas}
+ * overwrite
+ * \endcode
+ *
+ * \section kw_pas_overwrite_desc Beschreibung
+ * Platzhalterbegriff, oft ist override gemeint.
+ */
+
+/** \page kw_pas_overload Pascal-Schluesselwort: overload
+ *
+ * \brief Erlaubt mehrere Routinen mit gleichem Namen und anderer Signatur.
+ *
+ * \section kw_pas_overload_syntax Syntax
+ * \code{.pas}
+ * overload
+ * \endcode
+ *
+ * \section kw_pas_overload_desc Beschreibung
+ * Erlaubt mehrere Routinen mit gleichem Namen und anderer Signatur.
+ */
+
+/** \page kw_pas_object Pascal-Schluesselwort: object
+ *
+ * \brief Aelterer objektorientierter Typ in Pascal.
+ *
+ * \section kw_pas_object_syntax Syntax
+ * \code{.pas}
+ * object
+ * \endcode
+ *
+ * \section kw_pas_object_desc Beschreibung
+ * Aelterer objektorientierter Typ in Pascal.
+ */
+
+/** \page kw_pas_reintroduce Pascal-Schluesselwort: reintroduce
+ *
+ * \brief Fuehrt einen geerbten Namen bewusst erneut ein.
+ *
+ * \section kw_pas_reintroduce_syntax Syntax
+ * \code{.pas}
+ * reintroduce
+ * \endcode
+ *
+ * \section kw_pas_reintroduce_desc Beschreibung
+ * Fuehrt einen geerbten Namen bewusst erneut ein.
+ */
+
+/** \page kw_pas_set Pascal-Schluesselwort: set
+ *
+ * \brief Definiert einen Mengen- oder Set-Typ.
+ *
+ * \section kw_pas_set_syntax Syntax
+ * \code{.pas}
+ * set
+ * \endcode
+ *
+ * \section kw_pas_set_desc Beschreibung
+ * Definiert einen Mengen- oder Set-Typ.
+ */
