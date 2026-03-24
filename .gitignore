@@ -9,3 +9,8 @@ src/test1/src/assets/img/logo_dark.png
 src/test1/src/assets/img/dbase.jpg
 src/test1/src/assets/img/dbase3.jpg
 *.bak
+/src/test1/xml
+src/test1/packed.zip
+/src/test1/1
+/src/test2
+/test2

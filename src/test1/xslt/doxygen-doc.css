@@ -229,3 +229,16 @@
 .doxy-file-letter-group { margin-top: 1rem; }
 .doxy-file-letter-group h4 { margin: 0.2rem 0 0.65rem; color: #c9d4f3; }
 .doxy-file-letter-group + .doxy-file-letter-group { margin-top: 1.25rem; }
+
+.doxy-keyword-name {
+  color: #ffd54a;
+  font-weight: 700;
+}
+.doxy-page-ace-host {
+  margin-top: 0.35rem;
+}
+.doxy-page-ace-editor {
+  width: 100%;
+  white-space: pre;
+  font-family: Consolas, "Courier New", monospace;
+}

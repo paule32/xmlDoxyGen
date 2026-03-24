@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# -------------------------------------------------------------------------------
+# (c) 2026 by Jens Kallup - paule32
+# all rights reserved.
+#
+# python scripts\convert_xml_to_html_fragments.py ^
+#    xml xslt -o out --full-pages ^
+#    --template example_template.html
+# -------------------------------------------------------------------------------
 from __future__ import annotations
 
 import argparse
@@ -7,7 +15,6 @@ import shutil
 from pathlib import Path
 
 from lxml import etree
-
 
 XSLT_MAP = {
     "dir": "dir_body.xslt",

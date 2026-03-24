@@ -6,6 +6,16 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 1252 >nul
+
+mkdir out
+mkdir out\dark
+mkdir out\dark\de
+mkdir out\dark\en
+
+mkdir out\light
+mkdir out\light\de
+mkdir out\light\en
+
 :: ==========================================
 :: Deutsche Doku
 :: ==========================================
@@ -60,6 +70,28 @@ echo ==========================================
 echo   Fertig.
 echo ==========================================
 
-::python scripts\convert_xml_to_html_fragments.py xml xslt -o out --full-pages --template example_template.html
+mv out\chm    ..\..\test2
+mv out\dark   ..\..\test2
+mv out\de     ..\..\test2
+mv out\en     ..\..\test2
+mv out\light  ..\..\test2
+mv out\xml    ..\..\test2
+
+python scripts\convert_xml_to_html_fragments.py xml xslt -o out --full-pages --template template2.html
+mkdir out\css
+mkdir out\img
+mkdir out\js
+mkdir out\vendors
+rm -rf out\chm
+rm -rf out\dark
+rm -rf out\light
+rm -rf out\de
+rm -rf out\en
+rm -rf out\xml
+xcopy /E /I /Y css     out\css
+xcopy /E /I /Y img     out\img
+xcopy /E /I /Y js      out\js
+xcopy /E /I /Y vendors out\vendors
+
 endlocal
 pause

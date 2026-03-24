@@ -1,3 +1,29 @@
+/** \page kw_pas_destructor Pascal-Schluesselwort: destructor
+ *
+ * \brief Definiert einen destructor in Pascal oder Delphi.
+ *
+ * \section kw_pas_destructor_syntax Syntax
+ * \code{.pas}
+ * class
+ * \endcode
+ *
+ * \section kw_pas_destructor_desc Beschreibung
+ * Definiert einen Destruktor in Pascal oder Delphi.
+ */
+
+/** \page kw_pas_constructor Pascal-Schluesselwort: constructor
+ *
+ * \brief Definiert einen constructor in Pascal oder Delphi.
+ *
+ * \section kw_pas_constructor_syntax Syntax
+ * \code{.pas}
+ * constructor
+ * \endcode
+ *
+ * \section kw_pas_constructor_desc Beschreibung
+ * Definiert einen Konstruktor in Pascal oder Delphi.
+ */
+
 /** \page kw_pas_class Pascal-Schluesselwort: class
  *
  * \brief Definiert einen Klassentyp in Pascal oder Delphi.

@@ -33,8 +33,21 @@
   <xsl:param name="file"/>
   <xsl:variable name="f" select="translate($file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
   <xsl:choose>
-    <xsl:when test="substring($f, string-length($f) - 2) = '.py' or substring($f, string-length($f) - 3) = '.pyw'">Python</xsl:when>
-    <xsl:when test="substring($f, string-length($f) - 3) = '.pas' or substring($f, string-length($f) - 2) = '.pp' or substring($f, string-length($f) - 1) = '.p'">Pascal</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 2) = '.py'
+                 or substring($f, string-length($f) - 3) = '.pyw'">Python</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 3) = '.pas'
+                 or substring($f, string-length($f) - 2) = '.pp'
+                 or substring($f, string-length($f) - 1) = '.p'">Pascal</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 1) = '.c'
+                 or substring($f, string-length($f) - 1) = '.h'
+                 or substring($f, string-length($f) - 2) = '.hh'
+                 or substring($f, string-length($f) - 3) = '.hpp'
+                 or substring($f, string-length($f) - 3) = '.h++'
+                 or substring($f, string-length($f) - 2) = '.cc'
+                 or substring($f, string-length($f) - 3) = '.cpp'
+                 or substring($f, string-length($f) - 3) = '.cxx'
+                 or substring($f, string-length($f) - 3) = '.c++'">C++</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 2) = '.js'">JavaScript</xsl:when>
     <xsl:otherwise>C++</xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -53,12 +66,23 @@
   <xsl:param name="file"/>
   <xsl:variable name="f" select="translate($file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
   <xsl:choose>
-    <xsl:when test="substring($f, string-length($f) - 2) = '.py' or substring($f, string-length($f) - 3) = '.pyw'">python</xsl:when>
-    <xsl:when test="substring($f, string-length($f) - 3) = '.pas' or substring($f, string-length($f) - 2) = '.pp' or substring($f, string-length($f) - 1) = '.p'">pascal</xsl:when>
-    <xsl:when test="substring($f, string-length($f) - 1) = '.h' or substring($f, string-length($f) - 3) = '.hpp' or substring($f, string-length($f) - 2) = '.hh' or substring($f, string-length($f) - 3) = '.cpp' or substring($f, string-length($f) - 1) = '.c' or substring($f, string-length($f) - 2) = '.cc' or substring($f, string-length($f) - 3) = '.cxx'">c_cpp</xsl:when>
-    <xsl:when test="substring($f, string-length($f) - 3) = '.qml'">javascript</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 2) = '.py'
+                 or substring($f, string-length($f) - 3) = '.pyw'">python</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 3) = '.pas'
+                 or substring($f, string-length($f) - 2) = '.pp'
+                 or substring($f, string-length($f) - 1) = '.p'">pascal</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 1) = '.h'
+                 or substring($f, string-length($f) - 3) = '.hpp'
+                 or substring($f, string-length($f) - 2) = '.hh'
+                 or substring($f, string-length($f) - 3) = '.cpp'
+                 or substring($f, string-length($f) - 1) = '.c'
+                 or substring($f, string-length($f) - 2) = '.cc'
+                 or substring($f, string-length($f) - 3) = '.cxx'">c_cpp</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 3) = '.qml'
+                 or substring($f, string-length($f) - 3) = '.js'">javascript</xsl:when>
     <xsl:when test="substring($f, string-length($f) - 3) = '.xml'">xml</xsl:when>
-    <xsl:when test="substring($f, string-length($f) - 3) = '.htm' or substring($f, string-length($f) - 4) = '.html'">html</xsl:when>
+    <xsl:when test="substring($f, string-length($f) - 3) = '.htm'
+                 or substring($f, string-length($f) - 4) = '.html'">html</xsl:when>
     <xsl:otherwise>text</xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -122,9 +146,25 @@
   <xsl:if test="string-length($letters) &gt; 0">
     <xsl:variable name="letter" select="substring($letters, 1, 1)"/>
     <xsl:variable name="matchingCount" select="count(/doxygenindex/compound[@kind='file' and not(contains(translate(name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '.dox'))][
-      (( $lang = 'Python' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw')) or
-       ( $lang = 'Pascal' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')) or
-       ( $lang = 'C++' and not(substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')))
+      (( $lang = 'Python' and (
+               substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw'))
+            or
+       ( $lang = 'Pascal' and (
+               substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p'))
+            or
+       ( $lang = 'JavaScript' and (
+               substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.js'))
+            or
+       ( $lang = 'C++' and not(
+               substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.js'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp'
+            or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')))
       and translate(substring(name, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = $letter
     ])"/>
     <xsl:choose>
@@ -137,8 +177,8 @@
     </xsl:choose>
     <xsl:text> </xsl:text>
     <xsl:call-template name="alphabet-links">
-      <xsl:with-param name="lang" select="$lang"/>
-      <xsl:with-param name="letters" select="substring($letters, 2)"/>
+      <xsl:with-param  name="lang" select="$lang"/>
+      <xsl:with-param  name="letters" select="substring($letters, 2)"/>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
