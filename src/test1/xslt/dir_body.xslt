@@ -14,6 +14,7 @@
     <a href="pages.html">Seiten</a>
     <a href="classes.html">Klassen</a>
     <a href="namespaces.html">Namespaces</a>
+    <a href="toc.html">TOC</a>
   </div>
   <div class="doxy-card">
     <h2><xsl:text>Verzeichnis:&#160;&#160;</xsl:text><xsl:value-of select="compounddef/compoundname"/></h2>

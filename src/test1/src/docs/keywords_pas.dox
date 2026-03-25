@@ -37,6 +37,19 @@
  * Definiert einen Klassentyp in Pascal oder Delphi.
  */
 
+/** \page kw_pas_public Pascal-Schluesselwort: public
+ *
+ * \brief Definiert einen Klassentyp in Pascal oder Delphi.
+ *
+ * \section kw_pas_public_syntax Syntax
+ * \code{.pas}
+ * public
+ * \endcode
+ *
+ * \section kw_pas_public_desc Beschreibung
+ * Definiert einen Klassentyp in Pascal oder Delphi.
+ */
+
 /** \page kw_pas_program Pascal-Schluesselwort: program
  *
  * \brief Markiert den Einstiegspunkt eines Pascal-Programms.

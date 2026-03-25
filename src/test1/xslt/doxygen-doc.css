@@ -242,3 +242,118 @@
   white-space: pre;
   font-family: Consolas, "Courier New", monospace;
 }
+
+
+.doxy-class-title-name,
+.doxy-card h2 .doxy-class-title-name,
+.doxy-docs h2 .doxy-class-title-name {
+  color: #ffd54a !important;
+  font-weight: 700;
+}
+
+.doxy-text-block {
+  background: var(--code);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.doxy-declaration {
+  line-height: 1.6;
+}
+
+
+.doxy-kw-link { color: inherit; text-decoration: none; border-bottom: 2px solid transparent; cursor: text; transition: border-color .15s ease; }
+.doxy-kw-link:hover, .doxy-kw-link:focus { border-bottom-color: #8ab4ff; cursor: pointer; }
+.doxy-desc-brief-row, .doxy-desc-since-row, .doxy-desc-brief, .doxy-desc-since, .doxy-detail-since { margin-top: 0.55rem; }
+.doxy-desc-since-row, .doxy-desc-since, .doxy-detail-since { color: var(--muted); }
+.doxy-more-link { margin-left: .35rem; text-decoration: none; border-bottom: 2px solid transparent; }
+.doxy-more-link:hover, .doxy-more-link:focus { border-bottom-color: #8ab4ff; }
+.doxy-member-details-list { margin-top: 1rem; display: grid; gap: 1rem; }
+.doxy-member-detail h4 { margin: 0 0 .5rem; }
+.doxy-class-title-name { color: #ffd54a !important; }
+
+.doxy-member-table .doxy-member-desc-row td,
+.doxy-section-member-table .doxy-member-desc-row td {
+  padding-top: 0.2rem;
+  padding-bottom: 0.95rem;
+  border-top: 0;
+}
+.doxy-member-main-row td { border-bottom: 0; }
+.doxy-member-desc-row td { background: rgba(255,255,255,.015); }
+.doxy-file-title-name { color: #ffd54a !important; font-weight: 700; }
+.doxy-toc-list { margin: 0; padding-left: 1.2rem; }
+.doxy-toc-list li { margin: 0.35rem 0; }
+
+.doxy-badge-scroll {
+  max-height: 300px;
+  overflow: auto;
+  padding-right: .35rem;
+}
+.doxy-badge-scroll-tree {
+  max-height: 300px;
+}
+.doxy-badge-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.doxy-badge-scroll::-webkit-scrollbar-thumb {
+  background: rgba(138,180,255,.35);
+  border-radius: 999px;
+}
+.doxy-badge-scroll::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.04);
+}
+.doxy-member-main-row td:first-child { width: 72%; }
+.doxy-member-main-row td:last-child { width: 28%; }
+.doxy-member-desc-row td { padding-top: .4rem; }
+.doxy-desc-brief-row, .doxy-desc-since-row { display:block; width:100%; }
+.doxy-desc-since-row { margin-top:.55rem; }
+
+.doxy-member-table th.doxy-col-visibility,
+.doxy-member-table td.doxy-col-visibility {
+  width: 18%;
+  text-align: right;
+  white-space: nowrap;
+}
+.doxy-member-table th:first-child,
+.doxy-member-table td:first-child {
+  width: 82%;
+}
+
+
+.doxy-source-div {
+  display: block;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-family: Consolas, "Courier New", monospace;
+  line-height: 1.5;
+}
+
+.doxy-pre.doxy-source-div {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.doxy-source-div .doxy-kw-link,
+.doxy-member-table .doxy-kw-link,
+.doxy-section-member-table .doxy-kw-link,
+.doxy-member-detail .doxy-kw-link,
+.doxy-card code .doxy-kw-link {
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.doxy-source-div .doxy-kw-link:hover,
+.doxy-member-table .doxy-kw-link:hover,
+.doxy-section-member-table .doxy-kw-link:hover,
+.doxy-member-detail .doxy-kw-link:hover,
+.doxy-card code .doxy-kw-link:hover {
+  border-bottom-color: currentColor;
+  text-decoration: none;
+}

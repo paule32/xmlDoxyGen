@@ -192,7 +192,7 @@ IMAGE_PATH             =
 
 INPUT_FILTER           =
 
-FILTER_PATTERNS        =
+FILTER_PATTERNS        = *.pas="python ../scripts/pas2doxy_filter.py" *.pp="python ../scripts/pas2doxy_filter.py" *.inc="python ../scripts/pas2doxy_filter.py"
 FILTER_SOURCE_FILES    = NO
 FILTER_SOURCE_PATTERNS =
 
@@ -202,7 +202,7 @@ IMPLICIT_DIR_DOCS      = YES
 
 FORTRAN_COMMENT_AFTER  = 72
 
-SOURCE_BROWSER         = NO
+SOURCE_BROWSER         = YES
 INLINE_SOURCES         = NO
 
 STRIP_CODE_COMMENTS    = YES

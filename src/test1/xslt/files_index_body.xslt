@@ -118,7 +118,7 @@
 
 <xsl:template name="find-page-href-by-label">
   <xsl:param name="label"/>
-  <xsl:variable name="idx" select="document('../xml/index.xml')/doxygenindex"/>
+  <xsl:variable name="idx" select="document('../out/dark/de/xml/index.xml')/doxygenindex"/>
   <xsl:variable name="compound" select="$idx/compound[@kind='page'][name=$label][1]"/>
   <xsl:choose>
     <xsl:when test="$compound">
@@ -213,9 +213,18 @@
   <xsl:if test="string-length($letters) &gt; 0">
     <xsl:variable name="letter" select="substring($letters, 1, 1)"/>
     <xsl:variable name="items" select="/doxygenindex/compound[@kind='file' and not(contains(translate(name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '.dox'))][
-      (( $lang = 'Python' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw')) or
-       ( $lang = 'Pascal' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')) or
-       ( $lang = 'C++' and not(substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp' or substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')))
+      (( $lang = 'Python' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py'
+                           or  substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw')
+       ) or
+       ( $lang = 'Pascal' and (substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas'
+                           or  substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp'
+                           or  substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')
+       ) or
+       ( $lang = 'C++' and not(substring(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.py'
+                           or substring(translate(document(concat(@refid, '.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pyw'
+                           or substring(translate(document(concat(@refid, '.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 3) = '.pas'
+                           or substring(translate(document(concat(@refid, '.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 2) = '.pp'
+                           or substring(translate(document(concat(@refid, '.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), string-length(translate(document(concat(@refid,'.xml'), /)/doxygen/compounddef/location/@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) - 1) = '.p')))
       and translate(substring(name, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = $letter
     ]"/>
     <xsl:if test="count($items) &gt; 0">
@@ -259,6 +268,7 @@
     <a href="pages.html">Seiten</a>
     <a href="classes.html">Klassen</a>
     <a href="namespaces.html">Namespaces</a>
+    <a href="toc.html">TOC</a>
   </div>
   <div class="doxy-card">
     <h2>Datei-Ansicht</h2>
@@ -443,6 +453,7 @@
     <a href="pages.html">Seiten</a>
     <a href="classes.html">Klassen</a>
     <a href="namespaces.html">Namespaces</a>
+    <a href="toc.html">TOC</a>
   </div>
   <div class="doxy-card"><h2>Dateien</h2></div>
   <xsl:call-template name="render-file-language"><xsl:with-param name="lang" select="'Python'"/></xsl:call-template>

@@ -57,7 +57,7 @@
   <xsl:param name="label"/>
   <xsl:param name="anchor"/>
 
-  <xsl:variable name="idx" select="document('../xml/index.xml')/doxygenindex"/>
+  <xsl:variable name="idx" select="document('../out/dark/de/xml/index.xml')/doxygenindex"/>
   <xsl:variable name="compound" select="$idx/compound[@kind='page'][name=$label][1]"/>
 
   <xsl:choose>
@@ -80,7 +80,7 @@
   <xsl:param name="member-refid"/>
   <xsl:param name="anchor"/>
 
-  <xsl:variable name="idx" select="document('../xml/index.xml')/doxygenindex"/>
+  <xsl:variable name="idx" select="document('../out/dark/de/xml/index.xml')/doxygenindex"/>
   <xsl:variable name="owner" select="$idx/compound[member/@refid=$member-refid][1]"/>
 
   <xsl:choose>
@@ -151,10 +151,11 @@
     <a href="pages.html">Seiten</a>
     <a href="classes.html">Klassen</a>
     <a href="namespaces.html">Namespaces</a>
+    <a href="toc.html">TOC</a>
   </div>
 
   <div class="doxy-card">
-    <h2><xsl:text>Datei:&#160;&#160;</xsl:text><xsl:call-template name="basename"><xsl:with-param name="path" select="compounddef/location/@file"/></xsl:call-template></h2>
+    <h2><xsl:text>Datei:&#160;&#160;</xsl:text><span class="doxy-file-title-name"><xsl:call-template name="basename"><xsl:with-param name="path" select="compounddef/location/@file"/></xsl:call-template></span></h2>
     <div class="doxy-muted"><xsl:value-of select="compounddef/location/@file"/></div>
   </div>
 
@@ -192,9 +193,51 @@
     <xsl:text>      "class":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_class'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "continue":         "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_continue'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "break":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_break'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
-    <xsl:text>      "def":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_def'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>"&#10;</xsl:text>
+    <xsl:text>      "def":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_def'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "pass":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_pass'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "for":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_for'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "while":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_while'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "range":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_range'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "in":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_in'"               /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "import":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_import'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "from":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_from'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "return":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_return'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "dataclass":        "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_dataclass'"        /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "self":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_self'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "str":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_str'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "int":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_int'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "property":         "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_property'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "list":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_list'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "is":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_is'"               /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "isinstance":       "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_isinstance'"       /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "if":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_if'"               /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "elif":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_elif'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "else":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_else'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "super":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_super'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "None":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_None'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "True":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_True'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "False":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_False'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "not":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_not'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "and":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_and'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "or":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_or'"               /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "bool":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_bool'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "abs":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_abs'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "len":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_len'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "try":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_try'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "except":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_except'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "as":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_as'"               /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "finally":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_finally'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "with":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_py_with'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>"&#10;</xsl:text>
     <xsl:text>    },&#10;</xsl:text>
     <xsl:text>    pascal: {&#10;</xsl:text>
+    <xsl:text>      "constructor":      "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_constructor'"     /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "destructor":       "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_destructor'"      /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "public":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_public'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "protected":        "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_protected'"       /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "private":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_private'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "published":        "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_published'"       /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "property":         "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_property'"        /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "default":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_default'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "class":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_class'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "program":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_program'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "unit":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_pas_unit'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
@@ -247,6 +290,10 @@
     <xsl:text>    c_cpp: {&#10;</xsl:text>
     <xsl:text>      "class":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_class'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "virtual":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_virtual'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "public":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_public'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "protected":        "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_protected'"       /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "private":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_private'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "friend":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_friend'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "int":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_int'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "char":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_char'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "void":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_void'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
@@ -257,6 +304,7 @@
     <xsl:text>      "return":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_return'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "switch":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_switch'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "case":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_case'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "default":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_case'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "for":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_for'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "while":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_while'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "if":               "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_if'"              /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
@@ -265,8 +313,9 @@
     <xsl:text>      "define":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_define'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "ifdef":            "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_ifdef'"           /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "defined":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_defined'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
-    <xsl:text>      "typeof":           "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_typeof'"          /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "typedef":          "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_typedef'"         /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "cout":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_cout'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
+    <xsl:text>      "cerr":             "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_cerr'"            /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>",&#10;</xsl:text>
     <xsl:text>      "cin":              "</xsl:text><xsl:call-template name="find-page-href-by-label"><xsl:with-param name="label" select="'kw_cpp_cin'"             /><xsl:with-param name="anchor" select="''"/></xsl:call-template><xsl:text>"&#10;</xsl:text>
     <xsl:text>    }&#10;</xsl:text>
     <xsl:text>  };&#10;</xsl:text>

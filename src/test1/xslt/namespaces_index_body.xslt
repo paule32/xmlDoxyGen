@@ -14,6 +14,7 @@
   <a href="pages.html">Seiten</a>
   <a href="classes.html">Klassen</a>
   <a href="namespaces.html">Namespaces</a>
+  <a href="toc.html">TOC</a>
 </div>
   <table class="doxy-table">
     <thead><tr><th>Name</th><th>Beschreibung</th></tr></thead>

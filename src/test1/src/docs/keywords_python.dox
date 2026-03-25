@@ -26,3 +26,18 @@
  * \section kw_py_def_desc Beschreibung
  * Mit \c def wird eine Funktion oder eine Methode definiert. In Klassen beschreibt es typischerweise einen Member wie \c foo oder \c __init__.
  */
+
+
+/** \page kw_py_pass Python-Schluesselwort: pass
+ *
+ * \brief Platzhalter-Anweisung ohne Operation.
+ *
+ * \section kw_py_pass_syntax Syntax
+ * \code{.py}
+ * if ready:
+ *     pass
+ * \endcode
+ *
+ * \section kw_py_pass_desc Beschreibung
+ * Mit \c pass wird in Python bewusst keine Aktion ausgefuehrt. Es ist nuetzlich als Platzhalter in leeren Klassen, Funktionen oder Kontrollbloecken.
+ */

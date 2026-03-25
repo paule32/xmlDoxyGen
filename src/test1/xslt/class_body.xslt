@@ -52,6 +52,7 @@
     <a href="pages.html">Seiten</a>
     <a href="classes.html">Klassen</a>
     <a href="namespaces.html">Namespaces</a>
+    <a href="toc.html">TOC</a>
   </div>
 
   <xsl:variable name="class-name" select="string(compounddef/compoundname)"/>
