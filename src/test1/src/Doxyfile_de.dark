@@ -17,7 +17,7 @@ RECURSIVE              = YES
 
 INPUT_ENCODING         = UTF-8
 INPUT_FILE_ENCODING    =
-CHM_INDEX_ENCODING     = windows-1252
+#CHM_INDEX_ENCODING     = windows-1252
 
 FILE_PATTERNS          = *.h *.hpp *.c *.cpp *.cc *.cxx *.py *.pas *.inc *.dox
 
@@ -256,15 +256,15 @@ HTML_INDEX_NUM_ENTRIES = 100
 
 GENERATE_HTMLHELP      = YES
 
-CHM_FILE               = ./dBaseHelp_dark_de.chm
-HHC_LOCATION           = "C:/Program Files (x86)/HTML Help Workshop/hhc.exe"
+#CHM_FILE               = ./dBaseHelp_dark_de.chm
+#HHC_LOCATION           = "C:/Program Files (x86)/HTML Help Workshop/hhc.exe"
 
-#CLASS_DIAGRAMS         = YES
+CLASS_DIAGRAMS         = YES
 
-GENERATE_CHI           = NO
+#GENERATE_CHI           = NO
 
-BINARY_TOC             = NO
-TOC_EXPAND             = NO
+#BINARY_TOC             = NO
+#TOC_EXPAND             = NO
 
 SITEMAP_URL            =
 

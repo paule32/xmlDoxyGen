@@ -14,6 +14,7 @@ import json
 import base64
 import re
 import shutil
+import hashlib
 from pathlib import Path
 
 from lxml import etree
@@ -102,6 +103,308 @@ def compound_refid(xml_path: Path) -> str | None:
 
 
 
+
+
+def _local_name(tag: object) -> str:
+    if not isinstance(tag, str):
+        return ''
+    return tag.split('}', 1)[-1].lower()
+
+
+def _slug_text(value: str) -> str:
+    value = re.sub(r'[^A-Za-z0-9_\-]+', '_', value).strip('_')
+    return value or 'item'
+
+
+def _find_existing_asset(path_hint: str, search_roots: list[Path]) -> Path | None:
+    if not path_hint:
+        return None
+    hint = Path(path_hint)
+    candidates = []
+    if hint.is_absolute():
+        candidates.append(hint)
+    else:
+        for root in search_roots:
+            candidates.append((root / hint).resolve())
+            candidates.append((root / hint.name).resolve())
+    seen = set()
+    for cand in candidates:
+        key = str(cand)
+        if key in seen:
+            continue
+        seen.add(key)
+        if cand.exists() and cand.is_file():
+            return cand
+    filename = hint.name
+    for root in search_roots:
+        try:
+            for found in root.rglob(filename):
+                if found.is_file():
+                    return found
+        except Exception:
+            continue
+    return None
+
+
+def _asset_search_roots(xml_dir: Path) -> list[Path]:
+    roots = [xml_dir]
+    roots.extend(list(xml_dir.parents[:6]))
+    uniq = []
+    seen = set()
+    for root in roots:
+        try:
+            resolved = root.resolve()
+        except Exception:
+            resolved = root
+        key = str(resolved)
+        if key not in seen and resolved.exists():
+            uniq.append(resolved)
+            seen.add(key)
+    return uniq
+
+
+def _compound_html_href(kind: str, refid: str) -> str:
+    return f"{kind}_{slug_refid(refid)}.html" if kind in {'group', 'page', 'file', 'class', 'namespace', 'dir'} else ''
+
+
+def _first_text(*values: str) -> str:
+    for value in values:
+        value = str(value or '').strip()
+        if value:
+            return value
+    return ''
+
+
+def _collect_compounds(index_xml: Path) -> list[dict[str, str]]:
+    index_doc = parse_xml(index_xml)
+    compounds: list[dict[str, str]] = []
+    for comp in index_doc.findall('.//compound'):
+        kind = comp.get('kind') or ''
+        name = _text_content(comp.find('name')).strip()
+        refid = comp.get('refid') or ''
+        if not refid or not name:
+            continue
+        compounds.append({'kind': kind, 'name': name, 'refid': refid, 'href': _compound_html_href(kind, refid)})
+    return compounds
+
+
+def collect_visual_items(index_xml: Path, xml_dir: Path, out_dir: Path) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    compounds = _collect_compounds(index_xml)
+    search_roots = _asset_search_roots(xml_dir)
+    image_items: list[dict[str, object]] = []
+    structure_items: list[dict[str, object]] = []
+    image_seen: set[tuple[str, str]] = set()
+    structure_seen: set[tuple[str, str, str]] = set()
+    image_ref_re = re.compile(r'([A-Za-z0-9_./\-]+\.(?:png|jpg|jpeg|gif|svg|bmp|webp))', re.I)
+
+    for comp in compounds:
+        refid = comp['refid']
+        kind = comp['kind']
+        xml_path = xml_dir / f'{refid}.xml'
+        if not xml_path.exists():
+            continue
+        try:
+            doc = parse_xml(xml_path)
+        except Exception:
+            continue
+        root = doc.getroot()
+        compound_name = comp['name']
+        source_href = comp['href']
+        xml_text = xml_path.read_text(encoding='utf-8', errors='ignore')
+
+        image_hits: list[dict[str, str]] = []
+        for elem in root.iter():
+            lname = _local_name(elem.tag)
+            if lname in {'image', 'imagedata', 'graphic', 'dotfile', 'mscfile', 'diafile', 'plantuml'}:
+                ref = _first_text(elem.get('name'), elem.get('file'), elem.get('src'), elem.get('href'), _text_content(elem))
+                if ref:
+                    image_hits.append({'ref': ref, 'caption': _text_content(elem).strip()})
+        for match in image_ref_re.findall(xml_text):
+            image_hits.append({'ref': match, 'caption': ''})
+
+        img_idx = 0
+        for hit in image_hits:
+            ref = str(hit.get('ref') or '').strip().strip("\"'")
+            if not ref:
+                continue
+            img_idx += 1
+            key = (refid, ref.lower())
+            if key in image_seen:
+                continue
+            image_seen.add(key)
+            asset_path = _find_existing_asset(ref, search_roots)
+            page_id = hashlib.md5(f'{refid}|{ref}'.encode('utf-8')).hexdigest()[:12]
+            out_name = f'graphic_{page_id}.html'
+            copied_name = ''
+            if asset_path is not None:
+                copied_name = f'generated_media/{asset_path.name}'
+            label = Path(ref).name or f'Grafik {img_idx}'
+            description = _first_text(hit.get('caption', ''), f'Grafik aus {compound_name}')
+            image_items.append({
+                'name': label,
+                'description': description,
+                'source_compound': compound_name,
+                'source_href': source_href,
+                'asset_ref': ref,
+                'asset_path': asset_path,
+                'copied_name': copied_name,
+                'page_name': out_name,
+            })
+
+        table_idx = 0
+        list_idx = 0
+        for elem in root.iter():
+            lname = _local_name(elem.tag)
+            if lname == 'table':
+                table_idx += 1
+                key = (refid, 'table', str(table_idx))
+                if key in structure_seen:
+                    continue
+                structure_seen.add(key)
+                title = _first_text(elem.get('title'), _text_content(elem.find('title')), f'Tabelle {table_idx}')
+                description = _first_text(_text_content(elem.find('caption')), _text_content(elem.find('title')), f'Tabelle aus {compound_name}')
+                rows = []
+                for row in elem.findall('.//*'):
+                    if _local_name(row.tag) != 'row':
+                        continue
+                    cols = []
+                    for entry in row:
+                        if _local_name(entry.tag) == 'entry':
+                            cols.append(_text_content(entry).strip())
+                    if cols:
+                        rows.append(cols)
+                page_id = hashlib.md5(f'{refid}|table|{table_idx}'.encode('utf-8')).hexdigest()[:12]
+                structure_items.append({
+                    'kind': 'table',
+                    'name': title,
+                    'description': description,
+                    'source_compound': compound_name,
+                    'source_href': source_href,
+                    'rows': rows,
+                    'items': [],
+                    'page_name': f'tablelist_{page_id}.html',
+                })
+            elif lname in {'itemizedlist', 'orderedlist', 'variablelist'}:
+                list_idx += 1
+                key = (refid, 'list', str(list_idx))
+                if key in structure_seen:
+                    continue
+                structure_seen.add(key)
+                title = _first_text(elem.get('title'), f'Liste {list_idx}')
+                description = f'Liste aus {compound_name}'
+                items = []
+                for li in elem.iter():
+                    if _local_name(li.tag) == 'listitem':
+                        txt = _text_content(li).strip()
+                        if txt:
+                            items.append(txt)
+                page_id = hashlib.md5(f'{refid}|list|{list_idx}'.encode('utf-8')).hexdigest()[:12]
+                structure_items.append({
+                    'kind': 'list',
+                    'name': title,
+                    'description': description,
+                    'source_compound': compound_name,
+                    'source_href': source_href,
+                    'rows': [],
+                    'items': items,
+                    'page_name': f'tablelist_{page_id}.html',
+                })
+
+    image_items.sort(key=lambda x: str(x['name']).lower())
+    structure_items.sort(key=lambda x: (str(x['kind']), str(x['name']).lower()))
+    return image_items, structure_items
+
+
+def render_media_index_page(title: str, intro: str, items: list[dict[str, object]], empty_text: str = 'Keine Einträge gefunden.') -> str:
+    parts = ['<div class="doxy-docs">', '  <div class="doxy-nav">', '    <a href="index.html">Start</a>', '    <a href="toc.html">TOC</a>', '    <a href="graphics.html">Grafiken</a>', '    <a href="tables_lists.html">Tabellen / Listen</a>', '  </div>', '  <div class="doxy-card">', f'    <h2>{_html_text(title)}</h2>', f'    <p class="doxy-muted">{_html_text(intro)}</p>', '  </div>', '  <div class="doxy-card doxy-section-gap">', f'    <div class="doxy-kpi">{len(items)}</div>', f'    <span class="doxy-badge-label">{_html_text(title)}</span>', '  </div>', '  <div class="doxy-card doxy-section-gap">', '    <table class="doxy-table">', '      <thead><tr><th>Name</th><th>Beschreibung</th></tr></thead>', '      <tbody>']
+    if items:
+        for item in items:
+            href = str(item.get('page_name') or '')
+            name = str(item.get('name') or 'Eintrag')
+            desc = str(item.get('description') or '—')
+            parts.append(f'        <tr><td><a href="{_html_text(href)}">{_html_text(name)}</a></td><td>{_html_text(desc)}</td></tr>')
+    else:
+        parts.append(f'        <tr><td colspan="2" class="doxy-muted">{_html_text(empty_text)}</td></tr>')
+    parts += ['      </tbody>', '    </table>', '  </div>', '</div>']
+    return '\n'.join(parts)
+
+
+def render_graphic_detail_page(item: dict[str, object]) -> str:
+    parts = ['<div class="doxy-docs">', '  <div class="doxy-nav">', '    <a href="toc.html">TOC</a>', '    <a href="graphics.html">Grafiken</a>', '  </div>', '  <div class="doxy-card">', f'    <h2>{_html_text(str(item.get("name") or "Grafik"))}</h2>', f'    <div class="doxy-desc-brief-row">{_html_text(str(item.get("description") or "—"))}</div>']
+    if item.get('source_href'):
+        parts.append(f'    <div class="doxy-desc-since-row"><strong>Quelle:</strong> <a href="{_html_text(str(item.get("source_href")))}">{_html_text(str(item.get("source_compound") or "Dokumentation"))}</a></div>')
+    parts.append('  </div>')
+    parts.append('  <div class="doxy-card doxy-section-gap">')
+    parts.append('    <h3>Grafik</h3>')
+    copied_name = str(item.get('copied_name') or '')
+    if copied_name:
+        parts.append(f'    <div class="doxy-media-frame"><img src="{_html_text(copied_name)}" alt="{_html_text(str(item.get("name") or "Grafik"))}" class="doxy-media-image"></div>')
+    else:
+        parts.append(f'    <div class="doxy-text-block">{_html_text(str(item.get("asset_ref") or "Grafikreferenz nicht gefunden."))}</div>')
+    parts.append('  </div>')
+    parts.append('</div>')
+    return '\n'.join(parts)
+
+
+def render_structure_detail_page(item: dict[str, object]) -> str:
+    title = str(item.get('name') or ('Tabelle' if item.get('kind') == 'table' else 'Liste'))
+    parts = ['<div class="doxy-docs">', '  <div class="doxy-nav">', '    <a href="toc.html">TOC</a>', '    <a href="tables_lists.html">Tabellen / Listen</a>', '  </div>', '  <div class="doxy-card">', f'    <h2>{_html_text(title)}</h2>', f'    <div class="doxy-desc-brief-row">{_html_text(str(item.get("description") or "—"))}</div>']
+    if item.get('source_href'):
+        parts.append(f'    <div class="doxy-desc-since-row"><strong>Quelle:</strong> <a href="{_html_text(str(item.get("source_href")))}">{_html_text(str(item.get("source_compound") or "Dokumentation"))}</a></div>')
+    parts.append('  </div>')
+    parts.append('  <div class="doxy-card doxy-section-gap">')
+    if item.get('kind') == 'table':
+        rows = list(item.get('rows') or [])
+        if rows:
+            parts.append('    <table class="doxy-table">')
+            for ridx, row in enumerate(rows):
+                tag = 'th' if ridx == 0 else 'td'
+                parts.append('      <tr>' + ''.join(f'<{tag}>{_html_text(str(col))}</{tag}>' for col in row) + '</tr>')
+            parts.append('    </table>')
+        else:
+            parts.append('    <div class="doxy-text-block">Keine Tabellenstruktur in den XML-Daten gefunden.</div>')
+    else:
+        items = list(item.get('items') or [])
+        if items:
+            parts.append('    <ul class="doxy-link-list">' + ''.join(f'<li>{_html_text(str(val))}</li>' for val in items) + '</ul>')
+        else:
+            parts.append('    <div class="doxy-text-block">Keine Listeneinträge in den XML-Daten gefunden.</div>')
+    parts.append('  </div>')
+    parts.append('</div>')
+    return '\n'.join(parts)
+
+
+def write_visual_pages(index_xml: Path, xml_dir: Path, out_dir: Path, template_text: str | None) -> tuple[int, int]:
+    graphics, structures = collect_visual_items(index_xml, xml_dir, out_dir)
+    media_dir = out_dir / 'generated_media'
+    media_dir.mkdir(parents=True, exist_ok=True)
+    for item in graphics:
+        asset_path = item.get('asset_path')
+        copied_name = str(item.get('copied_name') or '')
+        if asset_path is not None and copied_name:
+            target = out_dir / copied_name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                shutil.copy2(asset_path, target)
+            except Exception:
+                pass
+        html = render_graphic_detail_page(item)
+        if template_text is not None:
+            html = render_full_page(template_text, str(item.get('name') or 'Grafik'), html)
+        (out_dir / str(item['page_name'])).write_text(html, encoding='utf-8')
+    for item in structures:
+        html = render_structure_detail_page(item)
+        if template_text is not None:
+            html = render_full_page(template_text, str(item.get('name') or 'Tabelle / Liste'), html)
+        (out_dir / str(item['page_name'])).write_text(html, encoding='utf-8')
+    graphics_index = render_media_index_page('Grafiken', 'Automatisch aus den Doxygen-XML-Daten ermittelte Grafiken.', graphics, 'Keine Grafiken in den XML-Daten gefunden.')
+    tables_index = render_media_index_page('Tabellen / Listen', 'Automatisch aus den Doxygen-XML-Daten ermittelte Tabellen und Listen.', structures, 'Keine Tabellen oder Listen in den XML-Daten gefunden.')
+    if template_text is not None:
+        graphics_index = render_full_page(template_text, 'Grafiken', graphics_index)
+        tables_index = render_full_page(template_text, 'Tabellen / Listen', tables_index)
+    (out_dir / 'graphics.html').write_text(graphics_index, encoding='utf-8')
+    (out_dir / 'tables_lists.html').write_text(tables_index, encoding='utf-8')
+    return len(graphics), len(structures)
 def _text_content(node) -> str:
     if node is None:
         return ""
@@ -839,17 +1142,8 @@ def render_classes_index_html(index_xml: Path, xml_dir: Path) -> str:
     parts.append('</div>')
     return '\n'.join(parts)
 
-def render_toc_html(index_xml: Path) -> str:
-    index_doc = parse_xml(index_xml)
-    compounds: list[dict[str, str]] = []
-    for comp in index_doc.findall('.//compound'):
-        kind = comp.get('kind') or ''
-        name = _text_content(comp.find('name')).strip()
-        refid = comp.get('refid') or ''
-        if not refid or not name:
-            continue
-        href = f"{kind}_{slug_refid(refid)}.html" if kind in {'group', 'page', 'file', 'class', 'namespace', 'dir'} else ''
-        compounds.append({'kind': kind, 'name': name, 'refid': refid, 'href': href})
+def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: int = 0) -> str:
+    compounds = _collect_compounds(index_xml)
 
     groups = sorted([c for c in compounds if c['kind'] == 'group'], key=lambda x: x['name'].lower())
     pages = sorted([c for c in compounds if c['kind'] == 'page'], key=lambda x: x['name'].lower())
@@ -945,6 +1239,8 @@ def render_toc_html(index_xml: Path) -> str:
     parts.append('  </div>')
     parts.append('  <div class="doxy-grid doxy-section-gap">')
     parts.append(section('Einstieg', start_items))
+    parts.append(f'<div class="doxy-card"><h3>Grafiken</h3><div class="doxy-kpi">{graphics_count}</div><div class="doxy-badge-label"><a href="graphics.html">Zur Grafik-Übersicht</a></div></div>')
+    parts.append(f'<div class="doxy-card"><h3>Tabellen / Listen</h3><div class="doxy-kpi">{structures_count}</div><div class="doxy-badge-label"><a href="tables_lists.html">Zur Tabellen-/Listen-Übersicht</a></div></div>')
     parts.append(section('Sprachgruppen', language_groups, 'Keine Sprachgruppen gefunden'))
     parts.append(section('Übersichten', overview_pages, 'Keine Übersichtsseiten gefunden'))
     parts.append(section('Qt / Beispiele', qt_items, 'Keine Qt-Beispiele gefunden', scroll=True))
@@ -961,6 +1257,35 @@ def render_toc_html(index_xml: Path) -> str:
     parts.append('  </div>')
     parts.append('</div>')
     return '\n'.join(parts)
+
+
+
+def patch_start_index_html(index_file: Path, graphics_count: int, structures_count: int) -> None:
+    if not index_file.exists():
+        return
+    html = index_file.read_text(encoding='utf-8')
+    badges = (
+        f'<div class="doxy-card"><a class="doxy-badge-label" href="graphics.html">Grafik</a><div class="doxy-kpi">{graphics_count}</div></div>\n'
+        f'<div class="doxy-card"><a class="doxy-badge-label" href="tables_lists.html">Tabellen</a><div class="doxy-kpi">{structures_count}</div></div>\n'
+    )
+    if 'href="graphics.html">Grafik</a>' in html and 'href="tables_lists.html">Tabellen</a>' in html:
+        return
+
+    toc_card_re = re.compile(
+        r'(<div class="doxy-card">\s*<a class="doxy-badge-label" href="toc\.html">TOC</a>\s*<div class="doxy-kpi">.*?</div>\s*</div>)',
+        flags=re.S,
+    )
+    match = toc_card_re.search(html)
+    if match:
+        html = html[:match.end(1)] + '\n' + badges.rstrip() + html[match.end(1):]
+    else:
+        grid_marker = '<div class="doxy-grid doxy-section-gap">'
+        pos = html.find(grid_marker)
+        if pos != -1:
+            html = html[:pos] + badges + html[pos:]
+        else:
+            html += '\n' + badges
+    index_file.write_text(html, encoding='utf-8')
 
 def main() -> int:
     ap = argparse.ArgumentParser(
@@ -1028,7 +1353,9 @@ def main() -> int:
             out_file.write_text(render_full_page(template_text, title, body_html), encoding="utf-8")
 
     keyword_map = build_keyword_href_map(args.out_dir)
-    toc_html = render_toc_html(index_xml)
+    graphics_count, structures_count = write_visual_pages(index_xml, args.xml_dir, args.out_dir, template_text)
+    patch_start_index_html(args.out_dir / 'index.html', graphics_count, structures_count)
+    toc_html = render_toc_html(index_xml, graphics_count, structures_count)
     if template_text is not None:
         toc_html = render_full_page(template_text, 'TOC', toc_html)
     (args.out_dir / 'toc.html').write_text(toc_html, encoding='utf-8')

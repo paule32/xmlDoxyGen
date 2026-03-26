@@ -357,3 +357,17 @@
   border-bottom-color: currentColor;
   text-decoration: none;
 }
+
+.doxy-media-frame {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  overflow: auto;
+}
+.doxy-media-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
