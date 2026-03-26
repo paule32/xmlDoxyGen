@@ -2,13 +2,3 @@
 @media (prefers-color-scheme: dark) {
   /* optional: hier nix für SVG, das machen wir per JS */
 }
-
-.center-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-
-.center-table td {
-  text-align: left;
-  padding: 6px 10px;
-}

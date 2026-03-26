@@ -15,6 +15,7 @@ import base64
 import re
 import shutil
 import hashlib
+import subprocess
 from pathlib import Path
 
 from lxml import etree
@@ -712,6 +713,16 @@ def _display_keyword_name(name: str) -> str:
     return name
 
 
+def _render_compound_label_html(item: dict[str, object], strip_kw: bool = False) -> str:
+    name = str(item.get('name') or '')
+    if strip_kw:
+        return _html_text(_display_keyword_name(name))
+    kind = str(item.get('kind') or '').lower()
+    if kind in {'class', 'struct', 'interface', 'protocol', 'exception'}:
+        return _display_class_name_html(item)
+    return _html_text(name)
+
+
 def _tokenize_preserving_ws(text: str) -> list[str]:
     if not text:
         return []
@@ -918,6 +929,7 @@ def render_pascal_class_page(info: dict[str, object], keyword_map: dict[str, str
     parts.append('    <a href="groups.html">Gruppen</a>')
     parts.append('    <a href="pages.html">Seiten</a>')
     parts.append('    <a href="classes.html">Klassen</a>')
+    parts.append('    <a href="class_diagrams.html">Klassendiagramme</a>')
     parts.append('    <a href="namespaces.html">Namespaces</a>')
     parts.append('    <a href="toc.html">TOC</a>')
     parts.append('  </div>')
@@ -954,34 +966,35 @@ def render_pascal_class_page(info: dict[str, object], keyword_map: dict[str, str
             continue
         parts.append('  <div class="doxy-card doxy-section-gap">')
         parts.append(f'    <h3>Sektion: {_html_text(visibility)}</h3>')
-        parts.append('    <table class="doxy-table doxy-section-member-table">')
-        parts.append('      <thead><tr><th>Typ</th><th>Deklaration</th></tr></thead>')
+        parts.append('    <table class="doxy-table doxy-section-member-table doxy-visibility-member-table">')
+        parts.append('      <thead><tr><th>Deklaration</th><th>Typ</th><th>Details</th></tr></thead>')
         parts.append('      <tbody>')
         for idx, entry in enumerate(entries, start=1):
             label = {
                 'field': 'Variable',
                 'constructor': 'Konstruktor',
                 'destructor': 'Destruktor',
-                'method': 'Methode',
+                'method': 'Funktion' if str(entry.get('signature') or '').strip().lower().startswith('function ') else 'Prozedur' if str(entry.get('signature') or '').strip().lower().startswith('procedure ') else 'Funktion',
                 'property': 'Property',
             }.get(entry.get('kind', ''), 'Member')
-            detail_href = f"#sec-{visibility.replace(' ', '-')}-{idx}" if entry.get('details') else None
-            desc = _render_description_cell(entry, detail_href)
+            detail_href = f"#sec-{visibility.replace(' ', '-')}-{idx}" if entry.get('details') or entry.get('brief') or entry.get('since') else None
+            more_html = f'<a class="doxy-more-link" href="{_html_text(detail_href)}">mehr...</a>' if detail_href else '—'
             parts.append('        <tr class="doxy-member-main-row">')
-            parts.append(f'          <td>{label}</td>')
             parts.append(f'          <td><code>{_linkify_pascal_text(entry["signature"], keyword_map, extra_map)}</code></td>')
-            parts.append('        </tr>')
-            parts.append('        <tr class="doxy-member-desc-row">')
-            parts.append(f'          <td colspan="2">{desc}</td>')
+            parts.append(f'          <td class="doxy-member-kind">{label}</td>')
+            parts.append(f'          <td class="doxy-member-more">{more_html}</td>')
             parts.append('        </tr>')
         parts.append('      </tbody>')
         parts.append('    </table>')
         for idx, entry in enumerate(entries, start=1):
-            if not entry.get('details'):
+            if not (entry.get('details') or entry.get('brief') or entry.get('since')):
                 continue
             parts.append(f'    <div class="doxy-member-detail" id="sec-{visibility.replace(" ", "-")}-{idx}">')
             parts.append(f'      <h4><code>{_linkify_pascal_text(entry["signature"], keyword_map, extra_map)}</code></h4>')
-            parts.append(f'      <div class="doxy-text-block">{_html_text(entry.get("details", ""))}</div>')
+            if entry.get('brief'):
+                parts.append(f'      <div class="doxy-desc-brief-row">{_html_text(entry.get("brief", ""))}</div>')
+            if entry.get('details'):
+                parts.append(f'      <div class="doxy-text-block">{_html_text(entry.get("details", ""))}</div>')
             if entry.get('since'):
                 parts.append(f'      <div class="doxy-detail-since"><strong>Seit:</strong> {_html_text(entry.get("since", ""))}</div>')
             parts.append('    </div>')
@@ -1102,6 +1115,7 @@ def render_classes_index_html(index_xml: Path, xml_dir: Path) -> str:
     parts.append('    <a href="groups.html">Gruppen</a>')
     parts.append('    <a href="pages.html">Seiten</a>')
     parts.append('    <a href="classes.html">Klassen</a>')
+    parts.append('    <a href="class_diagrams.html">Klassendiagramme</a>')
     parts.append('    <a href="namespaces.html">Namespaces</a>')
     parts.append('    <a href="toc.html">TOC</a>')
     parts.append('  </div>')
@@ -1142,8 +1156,339 @@ def render_classes_index_html(index_xml: Path, xml_dir: Path) -> str:
     parts.append('</div>')
     return '\n'.join(parts)
 
-def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: int = 0) -> str:
+
+
+def collect_class_diagram_items(index_xml: Path, xml_dir: Path) -> list[dict[str, object]]:
     compounds = _collect_compounds(index_xml)
+    class_kinds = {'class', 'struct', 'interface', 'protocol', 'exception'}
+    items: list[dict[str, object]] = []
+    name_to_item: dict[str, dict[str, object]] = {}
+
+    for comp in compounds:
+        if comp['kind'] not in class_kinds:
+            continue
+        item = {
+            'kind': comp['kind'],
+            'name': comp['name'],
+            'refid': comp['refid'],
+            'href': comp['href'],
+            'language': '',
+            'brief': '',
+            'source_file': '',
+            'bases': [],
+            'derived': [],
+        }
+        items.append(item)
+        name_to_item[comp['name']] = item
+
+    for item in items:
+        xml_path = xml_dir / f"{item['refid']}.xml"
+        if not xml_path.exists():
+            continue
+        try:
+            doc = parse_xml(xml_path)
+        except Exception:
+            continue
+        compdef = doc.find('compounddef')
+        if compdef is None:
+            compdef = doc.find('doxygen/compounddef')
+        if compdef is None:
+            continue
+        item['language'] = (compdef.get('language') or '').strip()
+        item['brief'] = _clean_doc_text(_text_content(compdef.find('briefdescription')).strip())
+        location = compdef.find('location')
+        item['source_file'] = (location.get('file') or '').strip() if location is not None else ''
+
+        for base in compdef.findall('basecompoundref'):
+            base_name = _text_content(base).strip()
+            if not base_name:
+                continue
+            base_refid = (base.get('refid') or '').strip()
+            base_href = _compound_html_href('class', base_refid) if base_refid else (name_to_item.get(base_name, {}).get('href') or '')
+            item['bases'].append({'name': base_name, 'refid': base_refid, 'href': base_href})
+
+        for derived in compdef.findall('derivedcompoundref'):
+            child_name = _text_content(derived).strip()
+            if not child_name:
+                continue
+            child_refid = (derived.get('refid') or '').strip()
+            child_href = _compound_html_href('class', child_refid) if child_refid else (name_to_item.get(child_name, {}).get('href') or '')
+            item['derived'].append({'name': child_name, 'refid': child_refid, 'href': child_href})
+
+    return sorted(items, key=lambda x: str(x['name']).lower())
+
+
+def _safe_filename(value: str) -> str:
+    return re.sub(r'[^A-Za-z0-9_.-]+', '_', value).strip('_') or 'item'
+
+
+def _dot_escape(value: str) -> str:
+    return str(value).replace('\\', '\\\\').replace('"', '\\"')
+
+
+
+
+def _infer_framework_namespace(source_file: str, language: str) -> str:
+    path = (source_file or '').replace('\\', '/').strip('/')
+    if not path:
+        return ''
+    parts = [part for part in path.split('/') if part]
+    if language.lower() == 'python':
+        for marker in ('py', 'python'):
+            if marker in parts:
+                idx = parts.index(marker)
+                if idx + 1 < len(parts):
+                    return parts[idx + 1]
+    return ''
+
+
+def _split_display_class_name(item: dict[str, object]) -> tuple[str, str]:
+    raw_name = str(item.get('name') or '').strip()
+    language = str(item.get('language') or '').strip()
+    source_file = str(item.get('source_file') or '').strip()
+    framework_ns = _infer_framework_namespace(source_file, language)
+    if language.lower() == 'python' and '::' in raw_name:
+        left, right = [part.strip() for part in raw_name.split('::', 1)]
+        if left == right and right:
+            return (framework_ns or left, right)
+    if '::' in raw_name:
+        left, right = [part.strip() for part in raw_name.rsplit('::', 1)]
+        return left, right
+    return framework_ns, raw_name
+
+
+def _display_class_name(item: dict[str, object]) -> str:
+    namespace_name, class_name = _split_display_class_name(item)
+    if namespace_name and class_name:
+        return f'{namespace_name} :: {class_name}'
+    return class_name or namespace_name or str(item.get('name') or '')
+
+
+def _display_class_name_html(item: dict[str, object]) -> str:
+    namespace_name, class_name = _split_display_class_name(item)
+    if namespace_name and class_name:
+        return (
+            f'<span class="doxy-class-title-namespace">{_html_text(namespace_name)}</span> '
+            f'<span class="doxy-class-title-sep">::</span> '
+            f'<span class="doxy-class-title-name">{_html_text(class_name)}</span>'
+        )
+    if class_name:
+        return f'<span class="doxy-class-title-name">{_html_text(class_name)}</span>'
+    return _html_text(str(item.get('name') or ''))
+
+def _dot_html_label_for_display_name(value: str) -> str:
+    if ' :: ' in value:
+        namespace_name, class_name = [part.strip() for part in value.split('::', 1)]
+        return (
+            '<<FONT COLOR="#f5f5f5">' + _dot_escape(namespace_name) + '</FONT> '
+            '<FONT COLOR="#f5f5f5">::</FONT> '
+            '<B><FONT COLOR="#ffffff">' + _dot_escape(class_name) + '</FONT></B>>'
+        )
+    return '<<FONT COLOR="#ffffff">' + _dot_escape(value) + '</FONT>>'
+
+
+def build_class_diagram_dot(item: dict[str, object]) -> str:
+    name = _display_class_name(item) or str(item.get('name') or 'Class')
+    namespace_name, class_name = _split_display_class_name(item)
+    bases = [dict(base) for base in item.get('bases', [])]
+    if str(item.get('language') or '').strip().lower() == 'python' and namespace_name == 'Qt5' and class_name and class_name != 'QObject':
+        if not any(str(base.get('name') or '').strip() == 'QObject' for base in bases):
+            bases.insert(0, {'name': 'QObject', 'refid': '', 'href': ''})
+
+    lines = [
+        'digraph class_diagram {',
+        '  rankdir=BT;',
+        '  graph [fontsize=10, labelloc="t", pad=0.25, nodesep=0.45, ranksep=0.8, bgcolor="#000000"];',
+        '  node [shape=box, style="rounded,filled", fontsize=10, margin="0.16,0.10", fillcolor="#000000", color="#d6b44c", penwidth=2.0, fontcolor="#ffffff"];',
+        '  edge [fontsize=9, color="#ffd54a", fontcolor="#ffd54a", arrowsize=0.85, penwidth=1.2];',
+    ]
+
+    def add_node(node_name: str, href: str = '', current: bool = False) -> None:
+        attrs = [f'label={_dot_html_label_for_display_name(node_name)}']
+        attrs.append('fillcolor="#000000"')
+        attrs.append('color="#d6b44c"')
+        attrs.append('penwidth="2.0"')
+        attrs.append('fontcolor="#ffffff"')
+        if href:
+            attrs.append(f'URL="{_dot_escape(href)}"')
+            attrs.append('target="_self"')
+        lines.append(f'  "{_dot_escape(node_name)}" [{", ".join(attrs)}];')
+
+    add_node(name, str(item.get('href') or ''), current=True)
+
+    seen_nodes = {name}
+    for base in bases:
+        base_name = str(base.get('name') or '').strip()
+        if not base_name:
+            continue
+        if base_name not in seen_nodes:
+            add_node(base_name, str(base.get('href') or ''))
+            seen_nodes.add(base_name)
+        lines.append(f'  "{_dot_escape(name)}" -> "{_dot_escape(base_name)}";')
+
+    for child in item.get('derived', []):
+        child_name = str(child.get('name') or '').strip()
+        if not child_name:
+            continue
+        if child_name not in seen_nodes:
+            add_node(child_name, str(child.get('href') or ''))
+            seen_nodes.add(child_name)
+        lines.append(f'  "{_dot_escape(child_name)}" -> "{_dot_escape(name)}";')
+
+    lines.append('}')
+    return '\n'.join(lines)
+
+
+def render_class_diagram_detail_page(item: dict[str, object], svg_rel_path: str, dot_rel_path: str, svg_available: bool) -> str:
+    title = _display_class_name(item) or str(item.get('name') or 'Klassendiagramm')
+    title_html = _display_class_name_html(item)
+    brief = _html_text(str(item.get('brief') or '—'))
+    language = _html_text(str(item.get('language') or '—'))
+    class_href = _html_text(str(item.get('href') or ''))
+    lines = [
+        '<div class="doxy-docs">',
+        '  <div class="doxy-nav">',
+        '    <a href="index.html">Start</a>',
+        '    <a href="classes.html">Klassen</a>',
+        '    <a href="class_diagrams.html">Klassendiagramme</a>',
+        '    <a href="toc.html">TOC</a>',
+        '  </div>',
+        '  <div class="doxy-card">',
+        f'    <h2>Klassendiagramm: {title_html}</h2>',
+        f'    <div class="doxy-desc-brief-row">{brief}</div>',
+        f'    <div class="doxy-desc-since-row">Sprache: {language}</div>',
+        '  </div>',
+        '  <div class="doxy-card doxy-section-gap">',
+        f'    <div class="doxy-badge-label">Zur Klasse: <a href="{class_href}">{_html_text(title)}</a></div>',
+        '  </div>',
+        '  <div class="doxy-card doxy-section-gap">',
+        '    <h3>Diagramm</h3>',
+    ]
+    if svg_available:
+        lines.append(f'    <div class="doxy-diagram-frame"><object data="{_html_text(svg_rel_path)}" type="image/svg+xml" class="doxy-diagram-object">Klassendiagramm</object></div>')
+    else:
+        lines.append('    <div class="doxy-muted">Graphviz / dot wurde nicht gefunden. Das Diagramm wird beim nächsten Build erzeugt, sobald dot verfügbar ist.</div>')
+    lines.extend([
+        '  </div>',
+        '</div>',
+    ])
+    return '\n'.join(lines)
+
+
+def render_class_diagrams_index(items: list[dict[str, object]]) -> str:
+    parts = [
+        '<div class="doxy-docs">',
+        '  <div class="doxy-nav">',
+        '    <a href="index.html">Start</a>',
+        '    <a href="classes.html">Klassen</a>',
+        '    <a href="class_diagrams.html">Klassendiagramme</a>',
+        '    <a href="toc.html">TOC</a>',
+        '  </div>',
+        '  <div class="doxy-card">',
+        '    <h2>Klassendiagramme</h2>',
+        '    <p class="doxy-muted">Automatisch aus Doxygen-XML erzeugte Vererbungsdiagramme pro Klasse.</p>',
+        '  </div>',
+        '  <div class="doxy-card doxy-section-gap">',
+        f'    <div class="doxy-kpi">{len(items)}</div>',
+        '    <span class="doxy-badge-label">Klassendiagramme</span>',
+        '  </div>',
+        '  <div class="doxy-card doxy-section-gap">',
+        '    <table class="doxy-table">',
+        '      <thead><tr><th>Klasse</th><th>Sprache</th><th>Beschreibung</th><th>Diagramm</th></tr></thead>',
+        '      <tbody>',
+    ]
+    if not items:
+        parts.append('        <tr><td colspan="4" class="doxy-muted">Keine Klassen für Diagramme gefunden.</td></tr>')
+    else:
+        for item in items:
+            title_html = _display_class_name_html(item)
+            href = _html_text(str(item.get('href') or ''))
+            language = _html_text(str(item.get('language') or '—'))
+            brief = _html_text(str(item.get('brief') or '—'))
+            diagram_page = _html_text(str(item.get('diagram_page') or ''))
+            parts.append(f'        <tr><td><a href="{href}">{title_html}</a></td><td>{language}</td><td>{brief}</td><td><a href="{diagram_page}">anzeigen</a></td></tr>')
+    parts.extend([
+        '      </tbody>',
+        '    </table>',
+        '  </div>',
+        '</div>',
+    ])
+    return '\n'.join(parts)
+
+
+def _postprocess_svg_for_dark_background(svg_path: Path) -> None:
+    if not svg_path.exists():
+        return
+    text = svg_path.read_text(encoding='utf-8', errors='ignore')
+    text = text.replace('<polygon fill="white" stroke="transparent"', '<polygon fill="#000000" stroke="transparent"', 1)
+    text = text.replace('<svg ', '<svg style="background:#000000" ', 1)
+    svg_path.write_text(text, encoding='utf-8')
+
+
+def write_class_diagram_pages(index_xml: Path, xml_dir: Path, out_dir: Path, template_text: str | None) -> int:
+    items = collect_class_diagram_items(index_xml, xml_dir)
+    diagrams_dir = out_dir / 'class_diagrams'
+    diagrams_dir.mkdir(parents=True, exist_ok=True)
+
+    dot_available = shutil.which('dot') is not None
+
+    for item in items:
+        refid = str(item.get('refid') or item.get('name') or 'class')
+        safe = _safe_filename(refid)
+        dot_filename = f'{safe}.dot'
+        svg_filename = f'{safe}.svg'
+        page_filename = f'class_diagram_{safe}.html'
+        dot_path = diagrams_dir / dot_filename
+        svg_path = diagrams_dir / svg_filename
+        detail_path = out_dir / page_filename
+
+        dot_text = build_class_diagram_dot(item)
+        dot_path.write_text(dot_text, encoding='utf-8')
+
+        svg_available = False
+        if dot_available:
+            try:
+                subprocess.run(['dot', '-Tsvg', str(dot_path), '-o', str(svg_path)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                svg_available = svg_path.exists()
+                if svg_available:
+                    _postprocess_svg_for_dark_background(svg_path)
+            except Exception:
+                svg_available = False
+
+        item['diagram_page'] = page_filename
+        item['diagram_dot'] = f'class_diagrams/{dot_filename}'
+        item['diagram_svg'] = f'class_diagrams/{svg_filename}' if svg_available else ''
+
+        detail_html = render_class_diagram_detail_page(item, f'class_diagrams/{svg_filename}', f'class_diagrams/{dot_filename}', svg_available)
+        if template_text is not None:
+            detail_html = render_full_page(template_text, f'Klassendiagramm {_display_class_name(item)}', detail_html)
+        detail_path.write_text(detail_html, encoding='utf-8')
+
+    index_html = render_class_diagrams_index(items)
+    if template_text is not None:
+        index_html = render_full_page(template_text, 'Klassendiagramme', index_html)
+    (out_dir / 'class_diagrams.html').write_text(index_html, encoding='utf-8')
+    return len(items)
+
+def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: int = 0, class_diagrams_count: int = 0) -> str:
+    compounds = _collect_compounds(index_xml)
+    xml_dir = index_xml.parent
+    class_info_by_refid: dict[str, dict[str, object]] = {}
+    try:
+        for item in collect_class_diagram_items(index_xml, xml_dir):
+            class_info_by_refid[str(item.get('refid') or '')] = item
+    except Exception:
+        class_info_by_refid = {}
+    for comp in compounds:
+        extra = class_info_by_refid.get(str(comp.get('refid') or ''))
+        if extra:
+            comp.update({
+                'language': extra.get('language', ''),
+                'source_file': extra.get('source_file', ''),
+                'brief': extra.get('brief', ''),
+                'bases': extra.get('bases', []),
+                'derived': extra.get('derived', []),
+            })
 
     groups = sorted([c for c in compounds if c['kind'] == 'group'], key=lambda x: x['name'].lower())
     pages = sorted([c for c in compounds if c['kind'] == 'page'], key=lambda x: x['name'].lower())
@@ -1164,13 +1509,26 @@ def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: 
         for item in items:
             if not item.get('href'):
                 continue
-            label = _display_keyword_name(item['name']) if strip_kw else label_map.get(item['name'], item['name'])
-            html_items.append(f'<li><a href="{_html_text(item["href"])}">{_html_text(label)}</a></li>')
+            if strip_kw:
+                label_html = _render_compound_label_html(item, strip_kw=True)
+            elif item.get('name') in label_map:
+                label_html = _html_text(label_map[item['name']])
+            else:
+                label_html = _render_compound_label_html(item)
+            html_items.append(f'<li><a href="{_html_text(item["href"])}">{label_html}</a></li>')
         return ''.join(html_items) or f'<li class="doxy-muted">{_html_text(empty)}</li>'
 
+    def badge_card(title: str, body_html: str, scroll: bool = False, extra_body_class: str = '') -> str:
+        body_classes = ['doxy-badge-card-body']
+        if scroll:
+            body_classes.append('doxy-badge-scroll')
+        if extra_body_class:
+            body_classes.append(extra_body_class)
+        return f'<div class="doxy-card doxy-badge-card"><div class="doxy-badge-card-head"><h3>{_html_text(title)}</h3></div><div class="{' '.join(body_classes)}">{body_html}</div></div>'
+
     def section(title: str, items: list[dict[str, str]], empty: str = '—', strip_kw: bool = False, scroll: bool = False, body_class: str = 'doxy-toc-list') -> str:
-        wrap_class = 'doxy-badge-scroll' if scroll else ''
-        return f'<div class="doxy-card"><h3>{_html_text(title)}</h3><div class="{wrap_class}"><ul class="{body_class}">{list_items(items, empty, strip_kw)}</ul></div></div>'
+        body_html = f'<div class="doxy-badge-scroll-inner"><ul class="{body_class}">{list_items(items, empty, strip_kw)}</ul></div>'
+        return badge_card(title, body_html, scroll=scroll)
 
     def prefix_items(prefix: str) -> list[dict[str, str]]:
         return [c for c in pages if c['name'].lower().startswith(prefix)]
@@ -1210,6 +1568,7 @@ def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: 
         {'name': 'Namespaces', 'href': 'namespaces.html'},
         {'name': 'Seiten', 'href': 'pages.html'},
         {'name': 'Gruppen', 'href': 'groups.html'},
+        {'name': 'Klassendiagramme', 'href': 'class_diagrams.html'},
     ]
 
     language_groups = named_items(['cpp', 'pascal', 'python'], groups)
@@ -1230,6 +1589,7 @@ def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: 
     parts.append('    <a href="groups.html">Gruppen</a>')
     parts.append('    <a href="pages.html">Seiten</a>')
     parts.append('    <a href="classes.html">Klassen</a>')
+    parts.append('    <a href="class_diagrams.html">Klassendiagramme</a>')
     parts.append('    <a href="namespaces.html">Namespaces</a>')
     parts.append('    <a href="toc.html">TOC</a>')
     parts.append('  </div>')
@@ -1237,23 +1597,20 @@ def render_toc_html(index_xml: Path, graphics_count: int = 0, structures_count: 
     parts.append('    <h2>TOC</h2>')
     parts.append('    <p class="doxy-muted">Themenorientierter Einstieg in die Dokumentation. Diese Seite wird bei jedem Build automatisch aus Doxygen-XML durch das Python/XSLT-Setup neu erzeugt.</p>')
     parts.append('  </div>')
-    parts.append('  <div class="doxy-grid doxy-section-gap">')
+    parts.append('  <div class="doxy-grid doxy-section-gap doxy-toc-grid">')
     parts.append(section('Einstieg', start_items))
-    parts.append(f'<div class="doxy-card"><h3>Grafiken</h3><div class="doxy-kpi">{graphics_count}</div><div class="doxy-badge-label"><a href="graphics.html">Zur Grafik-Übersicht</a></div></div>')
-    parts.append(f'<div class="doxy-card"><h3>Tabellen / Listen</h3><div class="doxy-kpi">{structures_count}</div><div class="doxy-badge-label"><a href="tables_lists.html">Zur Tabellen-/Listen-Übersicht</a></div></div>')
-    parts.append(section('Sprachgruppen', language_groups, 'Keine Sprachgruppen gefunden'))
     parts.append(section('Übersichten', overview_pages, 'Keine Übersichtsseiten gefunden'))
-    parts.append(section('Qt / Beispiele', qt_items, 'Keine Qt-Beispiele gefunden', scroll=True))
+    parts.append(section('Sprachgruppen', language_groups, 'Keine Sprachgruppen gefunden'))
+    parts.append(section('Klassen', classes, 'Keine Klassen gefunden', scroll=True))
+    parts.append(section('Namespaces', namespaces, 'Keine Namespaces gefunden', scroll=True))
+    parts.append(badge_card('Grafiken', f'<div class="doxy-badge-metric"><div class="doxy-kpi">{graphics_count}</div><div class="doxy-badge-label"><a href="graphics.html">Zur Grafik-Übersicht</a></div></div>'))
+    parts.append(badge_card('Tabellen', f'<div class="doxy-badge-metric"><div class="doxy-kpi">{structures_count}</div><div class="doxy-badge-label"><a href="tables_lists.html">Zur Tabellen-/Listen-Übersicht</a></div></div>'))
+    parts.append(badge_card('Klassendiagramme', f'<div class="doxy-badge-metric"><div class="doxy-kpi">{class_diagrams_count}</div><div class="doxy-badge-label"><a href="class_diagrams.html">Zur Diagramm-Übersicht</a></div></div>'))
     parts.append(section('Pascal-Schlüsselwörter', pascal_keyword_pages, 'Keine Pascal-Seiten gefunden', strip_kw=True, scroll=True))
     parts.append(section('Python-Schlüsselwörter', python_keyword_pages, 'Keine Python-Seiten gefunden', strip_kw=True, scroll=True))
     parts.append(section('C++-Schlüsselwörter', cpp_keyword_pages, 'Keine C++-Seiten gefunden', strip_kw=True, scroll=True))
-    parts.append(section('Keyword-Dateien', keyword_docs, 'Keine Keyword-Dateien gefunden', scroll=True))
-    parts.append(section('README / Einführung', readme_items, 'Keine README-Dateien gefunden'))
-    parts.append(f'<div class="doxy-card"><h3>Verzeichnisse</h3><div class="doxy-badge-scroll doxy-badge-scroll-tree">{build_dir_tree(dirs)}</div></div>')
-    parts.append(section('Klassen', classes, 'Keine Klassen gefunden', scroll=True))
-    parts.append(section('Namespaces', namespaces, 'Keine Namespaces gefunden', scroll=True))
-    parts.append(section('Gruppen', groups, 'Keine Gruppen gefunden', scroll=True))
     parts.append(section('Seiten', pages, 'Keine Seiten gefunden', scroll=True))
+    parts.append(badge_card('Verzeichnisse', f'<div class="doxy-badge-scroll-inner">{build_dir_tree(dirs)}</div>', scroll=True, extra_body_class='doxy-badge-scroll-tree'))
     parts.append('  </div>')
     parts.append('</div>')
     return '\n'.join(parts)
@@ -1354,8 +1711,9 @@ def main() -> int:
 
     keyword_map = build_keyword_href_map(args.out_dir)
     graphics_count, structures_count = write_visual_pages(index_xml, args.xml_dir, args.out_dir, template_text)
+    class_diagrams_count = write_class_diagram_pages(index_xml, args.xml_dir, args.out_dir, template_text)
     patch_start_index_html(args.out_dir / 'index.html', graphics_count, structures_count)
-    toc_html = render_toc_html(index_xml, graphics_count, structures_count)
+    toc_html = render_toc_html(index_xml, graphics_count, structures_count, class_diagrams_count)
     if template_text is not None:
         toc_html = render_full_page(template_text, 'TOC', toc_html)
     (args.out_dir / 'toc.html').write_text(toc_html, encoding='utf-8')
